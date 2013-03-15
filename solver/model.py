@@ -5,6 +5,8 @@ class Board(object):
 
     def remove_match(self, line):
 
+        # Please take into account this is COMPLETLY WRONG
+
         if len(self.__tiles[line]) == 0:
             return None
 
