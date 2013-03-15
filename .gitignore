@@ -8,3 +8,6 @@
 # Vim files
 .*~
 .*.sw[a-z]
+
+# Python files
+__pycache__
