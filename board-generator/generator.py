@@ -9,5 +9,5 @@ tiles = [str(t) for t in range(TILES)] * 2
 Random().shuffle(tiles)
 
 print(LINES)
-print('\n'.join(' '.join(tiles[i:i + TILES_PER_LINE]) for i in range(TILES_PER_LINE)))
+print('\n'.join(' '.join(tiles[i * TILES_PER_LINE:i * TILES_PER_LINE + TILES_PER_LINE]) for i in range(TILES_PER_LINE)))
 
