@@ -1,30 +1,58 @@
+# ?
+import copy
+
+
+def get_lines(match):
+    line1, line2 = match
+    if line1 < 0:
+        line1 = -line1
+    if line2 < 0:
+        line2 = -line2
+    return line1-1, line2-1
+
+def get_positions(match):
+    position1 = 0 if match[0] > 0 else -1
+    position2 = 0 if match[1] > 0 else -1
+    return position1, position2
+
 class Board(object):
 
     def __init__(self, tiles):
         self.__tiles = tiles
 
-    def remove_match(self, line):
+    def get_matches(self):
+        """Returns a list of tuples with the possible moves.
+        (token1, token2). token1 and token2 are integers in the range
+        [1..len(self.__tiles)] if the token is on the left
+        [-len(self.__tiles)..-1] if the token is on the right side
+        """
+        matches = []
+        for line in range(len(self.__tiles)):
+            # Lefty with another lefty
+            for second_line in range(line+1, len(self.__tiles)):
+                if self.__tiles[line][0] == self.__tiles[second_line][0]:
+                    matches.append((line+1, second_line+1))
+            # Lefty with righty
+            for second_line in range(len(self.__tiles)):
+                if self.__tiles[line][0] == self.__tiles[second_line][-1]:
+                    matches.append((line+1, ~second_line))
+            # righty with righty
+            for second_line in range(line+1, len(self.__tiles)):
+                if self.__tiles[line][-1] == self.__tiles[second_line][-1]:
+                    matches.append((~line, ~second_line))
+        return matches
 
-        # Please take into account this is COMPLETLY WRONG
+    def get_new_boards(self):
+        matches = self.get_matches()
+        return [self.mutate_board(match) for match in matches]
 
-        if len(self.__tiles[line]) == 0:
-            return None
+    def mutate_board(self, match):
+        new_tiles = copy.deepcopy(self.__tiles)
 
-        tile = self.__tiles[line][0]
-        matching_line = None
-
-        for i in range(len(self.__tiles)):
-            if self.__tiles[i][-1] == tile:
-                matching_line = i
-                break
-
-        if matching_line is None:
-            return None
-
-        new_tiles = [l.copy() for l in self.__tiles]
-
-        new_tiles[line].pop(0)
-        new_tiles[matching_line].pop()
+        line1, line2 = get_lines(match)
+        position1, position2 = get_positions(match)
+        new_tiles[line1].pop(position1)
+        new_tiles[line2].pop(position2)
 
         return Board(new_tiles)
 
@@ -33,14 +61,4 @@ class Board(object):
 
     def __repr__(self):
         return repr(self.__tiles)
-
-def explode(board):
-
-    children = []
-    for i in range(board.number_of_lines()):
-        new_board = board.remove_match(i)
-        if new_board is not None:
-            children.append(new_board)
-
-    return children
 
