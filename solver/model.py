@@ -28,16 +28,24 @@ class Board(object):
         """
         matches = []
         for line in range(len(self.__tiles)):
+            if not self.__tiles[line]:
+                continue
             # Lefty with another lefty
             for second_line in range(line+1, len(self.__tiles)):
+                if not self.__tiles[second_line]:
+                    continue
                 if self.__tiles[line][0] == self.__tiles[second_line][0]:
                     matches.append((line+1, second_line+1))
             # Lefty with righty
             for second_line in range(len(self.__tiles)):
+                if not self.__tiles[second_line] or second_line == line:
+                    continue
                 if self.__tiles[line][0] == self.__tiles[second_line][-1]:
                     matches.append((line+1, ~second_line))
             # righty with righty
             for second_line in range(line+1, len(self.__tiles)):
+                if not self.__tiles[second_line]:
+                    continue
                 if self.__tiles[line][-1] == self.__tiles[second_line][-1]:
                     matches.append((~line, ~second_line))
         return matches
@@ -58,6 +66,9 @@ class Board(object):
 
     def number_of_lines(self):
         return len(self.__tiles)
+
+    def is_empty(self):
+        return len([line for line in self.__tiles if not len(line)])
 
     def __repr__(self):
         return repr(self.__tiles)
