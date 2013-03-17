@@ -53,6 +53,21 @@ class DFS(BaseStrategy):
     def _get_next(self):
         return self.data.pop()
 
+class IterativeDeepening(BaseStrategy):
+
+    def __init__(self, depth):
+        self.depth = depth
+        self.curr_depth = depth
+        self.strategy = 'DFS'
+
+    def _get_next(self):
+        self.curr_depth = self.curr_depth - 1
+        if self.curr_depth == 0:
+            self.curr_depth = self.depth
+            self.strategy = 'DFS' if self.strategy == 'BFS' else 'BFS'
+
+        return self.data.pop() if self.strategy == 'DFS' else self.data.pop(0)
+
 def solve_with_strategy(board, strategy):
 
     strategy.initialize(board)
