@@ -68,7 +68,7 @@ class Board(object):
         return len(self.__tiles)
 
     def is_empty(self):
-        return len([line for line in self.__tiles if not len(line)])
+        return not len([line for line in self.__tiles if len(line)])
 
     def __repr__(self):
         return repr(self.__tiles)
