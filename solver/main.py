@@ -7,4 +7,4 @@ print(board)
 for new_board in board.get_new_boards():
     print(new_board)
 
-print strategies.solve_with_strategy(board, strategies.DFS())
+print strategies.solve_with_strategy(board, strategies.IterativeDeepening(1))

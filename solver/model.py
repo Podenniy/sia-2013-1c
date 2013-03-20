@@ -2,6 +2,9 @@
 import copy
 
 
+number_of_states = 0
+
+
 def get_lines(match):
     line1, line2 = match
     if line1 < 0:
@@ -73,3 +76,24 @@ class Board(object):
     def __repr__(self):
         return repr(self.__tiles)
 
+class State(object):
+
+    def __init__(self, board, depth, parent):
+        self.board = board
+        self.depth = depth
+        self.parent = parent
+        global number_of_states
+        self.creation_number = number_of_states
+        number_of_states += 1
+
+    def is_empty(self):
+        return self.board.is_empty()
+
+    def get_new_boards(self):
+        matches = self.board.get_matches()
+        return [State(self.board.mutate_board(match), self.depth + 1, self)
+                for match in matches]
+
+    def __repr__(self):
+        return "State %d: (depth = %d, board = '%s')" % (
+                self.creation_number, self.depth, repr(self.board))

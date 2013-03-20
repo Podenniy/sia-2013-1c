@@ -1,7 +1,9 @@
+# ?
+import model
+
 
 def is_solution(board):
     return board.is_empty()
-
 
 class Strategy(object):
 
@@ -20,22 +22,29 @@ class Strategy(object):
 class BaseStrategy(Strategy):
 
     def initialize(self, initial_board):
-        self.data = [initial_board]
+        self.solution = None
+        self.data = [model.State(initial_board, 0, None)]
 
     def done(self):
-        return not self.data
+        """Since Mahjong has a fixed depth, we'll stop with the first solution
+        we find in both BFS (this is always the case, no matter what the
+        problem is) and DFS."""
+        return self.solution is not None
 
     def get_next(self):
         item = self._get_next()
+        if not item:
+            print 'No items left, no solution was found'
+            return None
         print 'Analyzing %s' % item
         if item.is_empty():
-            # TODO: check height
-            print 'New solution: %s' % item
-            self.solution = item
+            self.set_solution(item)
         return item
 
+    def set_solution(self, item):
+        self.solution = item
+
     def add_boards(self, boards):
-        print 'Adding boards: %s' % '\n'.join([str(board) for board in boards])
         self.data.extend(boards)
 
     def get_result(self):
@@ -57,16 +66,28 @@ class IterativeDeepening(BaseStrategy):
 
     def __init__(self, depth):
         self.depth = depth
-        self.curr_depth = depth
-        self.strategy = 'DFS'
+        self.target_depth = depth
+        self.secondary_data = []
+        self.use_dfs_strategy = True
 
     def _get_next(self):
-        self.curr_depth = self.curr_depth - 1
-        if self.curr_depth == 0:
-            self.curr_depth = self.depth
-            self.strategy = 'DFS' if self.strategy == 'BFS' else 'BFS'
+        if not self.data:
+            self.data = self.secondary_data
+            self.secondary_data = []
+            self.target_depth += self.depth
+            self.use_dfs_strategy = not self.use_dfs_strategy
+            if not self.secondary_data:
+                return None
 
-        return self.data.pop() if self.strategy == 'DFS' else self.data.pop(0)
+        return self.data.pop() if self.use_dfs_strategy else self.data.pop(0)
+
+    def add_boards(self, boards):
+        for board in boards:
+            if board.depth >= self.target_depth:
+                self.secondary_data.append(board)
+            else:
+                self.data.append(board)
+
 
 def solve_with_strategy(board, strategy):
 
@@ -74,6 +95,8 @@ def solve_with_strategy(board, strategy):
 
     while not strategy.done():
         to_consider = strategy.get_next()
+        if not to_consider:
+            break
         new_boards = to_consider.get_new_boards()
         strategy.add_boards(new_boards)
 
