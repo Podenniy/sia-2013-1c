@@ -72,11 +72,12 @@ class IterativeDeepening(BaseStrategy):
 
     def _get_next(self):
         if not self.data:
+            print "No states found in primary stack/queue, swapping."
             self.data = self.secondary_data
             self.secondary_data = []
             self.target_depth += self.depth
             self.use_dfs_strategy = not self.use_dfs_strategy
-            if not self.secondary_data:
+            if not self.data:
                 return None
 
         return self.data.pop() if self.use_dfs_strategy else self.data.pop(0)
@@ -84,8 +85,10 @@ class IterativeDeepening(BaseStrategy):
     def add_boards(self, boards):
         for board in boards:
             if board.depth >= self.target_depth:
+                print "Add %s to secondary queue/stack" % board
                 self.secondary_data.append(board)
             else:
+                print "Add %s to primary queue/stack" % board
                 self.data.append(board)
 
 

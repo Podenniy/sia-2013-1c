@@ -41,11 +41,14 @@ class Board(object):
                     matches.append((line+1, second_line+1))
             # Lefty with righty
             for second_line in range(len(self.__tiles)):
-                if not self.__tiles[second_line] or second_line == line:
+                if len(self.__tiles[second_line]) <= 1:
+                    # Either empty or already covered as lefty + lefty
                     continue
                 if self.__tiles[line][0] == self.__tiles[second_line][-1]:
                     matches.append((line+1, ~second_line))
             # righty with righty
+            if len(self.__tiles[line]) == 1: # Skip, already covered as a lefty
+                continue
             for second_line in range(line+1, len(self.__tiles)):
                 if not self.__tiles[second_line]:
                     continue
