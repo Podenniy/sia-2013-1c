@@ -21,6 +21,7 @@ def main():
     heuristics = {
         'slim': greedy.slim_heuristic,
         'fat': greedy.fat_heuristic,
+        'trivial': greedy.trivial_heuristic,
     }
 
     def usage(msg = ""):

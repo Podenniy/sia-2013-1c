@@ -78,6 +78,8 @@ def fat_heuristic(state):
     removable_tiles = sum(n for n in board.get_border_sets() if n > 1)
     return board.tiles_left() - removable_tiles
 
+def trivial_heuristic(state):
+    return state.board.tiles_left()
 
 class InformedSearch(BaseStrategy):
 
@@ -106,7 +108,7 @@ class Greedy(InformedSearch):
         super(Greedy, self).__init__(lambda a: 0, heuristic_function)
 
 def cost_function(state):
-    return state.depth
+    return 2 * state.depth
 
 class AStar(InformedSearch):
 
