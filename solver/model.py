@@ -100,6 +100,7 @@ class State(object):
         self.board = board
         self.depth = depth
         self.parent = parent
+        self.h = 0
         global number_of_states
         self.creation_number = number_of_states
         number_of_states += 1
@@ -116,5 +117,5 @@ class State(object):
                 for match in matches]
 
     def __repr__(self):
-        return "State %d: (depth = %d, board = '%s')" % (
-                self.creation_number, self.depth, repr(self.board))
+        return "State %d: (h = %d, depth = %d, board = '%s')" % (
+                self.creation_number, self.h, self.depth, repr(self.board))

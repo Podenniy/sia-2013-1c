@@ -97,6 +97,7 @@ class InformedSearch(BaseStrategy):
     def add_boards(self, boards):
         for new_state in boards:
             h = self.heuristic(new_state)
+            new_state.h = h
             self.data.insert([self.cost(new_state) + h, h], new_state)
 
     def _get_next(self):
