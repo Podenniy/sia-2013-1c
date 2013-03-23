@@ -131,3 +131,4 @@ def solve_with_strategy(board, strategy):
         strategy.add_boards(new_boards)
 
     return strategy.get_result()
+
