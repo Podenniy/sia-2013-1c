@@ -1,4 +1,5 @@
 # ?
+import collections
 import logging
 import model
 
@@ -27,7 +28,7 @@ class BaseStrategy(Strategy):
 
     def initialize(self, initial_board):
         self.solution = None
-        self.data = [model.State(initial_board, 0, None)]
+        self.data = collections.deque([model.State(initial_board, 0, None)])
 
     def done(self):
         """Since Mahjong has a fixed depth, we'll stop with the first solution
@@ -42,8 +43,6 @@ class BaseStrategy(Strategy):
         item = self._get_next()
         if not item:
             return None
-        if logger.isEnabledFor('debug'):
-            logger.debug('Analyzing %s', item)
         if item.is_empty():
             self.set_solution(item)
         return item
@@ -62,7 +61,7 @@ class BaseStrategy(Strategy):
 class BFS(BaseStrategy):
 
     def _get_next(self):
-        return self.data.pop(0)
+        return self.data.popleft()
 
 class DFS(BaseStrategy):
 
@@ -74,7 +73,7 @@ class IterativeDeepening(BaseStrategy):
     def __init__(self, depth):
         self.depth = depth
         self.target_depth = depth
-        self.secondary_data = []
+        self.secondary_data = collections.deque()
         self.use_dfs_strategy = True
 
     def _is_empty(self):
@@ -83,13 +82,14 @@ class IterativeDeepening(BaseStrategy):
     def _get_next(self):
         if not self.data:
             self.data = self.secondary_data
-            self.secondary_data = []
+            self.secondary_data = collections.deque()
             self.target_depth += self.depth
             self.use_dfs_strategy = not self.use_dfs_strategy
             if not self.data:
                 return None
 
-        return self.data.pop() if self.use_dfs_strategy else self.data.pop(0)
+        return self.data.pop() if self.use_dfs_strategy \
+                else self.data.popleft()
 
     def add_boards(self, boards):
         for board in boards:
@@ -106,7 +106,7 @@ class IterativeDeepening(BaseStrategy):
 def solve_with_strategy(board, strategy):
 
     strategy.initialize(board)
-    seen = set()
+    seen = [set() for _ in xrange(73)]
 
     while not strategy.done():
         to_consider = strategy.get_next()
@@ -114,8 +114,8 @@ def solve_with_strategy(board, strategy):
             break
         new_boards = to_consider.get_new_boards()
         for board in new_boards:
-            if board not in seen:
-                seen.add(board)
+            if board not in seen[board.depth]:
+                seen[board.depth].add(board)
                 strategy.add_boards([board])
 
     return strategy.get_result()
