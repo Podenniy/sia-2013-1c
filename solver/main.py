@@ -1,6 +1,7 @@
 import parser
 import strategies
 import model
+import greedy
 
 from time import time
 from sys import argv
@@ -9,15 +10,15 @@ available_strategies = {
     'dfs': strategies.DFS,
     'bfs': strategies.BFS,
     'iterative': strategies.IterativeDeepening,
-    'A*': None,
-    'greedy': None,
+    'A*': greedy.AStar,
+    'greedy': greedy.Greedy,
 }
 
 needs_heuristics = ['A*', 'greedy']
 
 heuristics = {
-    'slim': strategies.slim_heuristic,
-    'fat': strategies.fat_heuristic,
+    'slim': greedy.slim_heuristic,
+    'fat': greedy.fat_heuristic,
 }
 
 def usage(msg = ""):

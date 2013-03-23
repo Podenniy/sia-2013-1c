@@ -1,6 +1,8 @@
 # ?
 import model
 
+from strategies import BaseStrategy
+
 class NthDimPriorityQueue(object):
 
     def __init__(self, priority_caps, inner_data_structures):
@@ -9,7 +11,7 @@ class NthDimPriorityQueue(object):
         self.priority_cap = priority_cap
         self.minimum = 0
         self.element_count = 0
-        self.priorities = [inner(priority_caps, inner_data_structures)
+        self.priorities = [inner(priority_caps[:], inner_data_structures[:])
                            for _ in xrange(priority_cap)]
 
     def insert(self, priorities, element):
@@ -35,7 +37,7 @@ class LastLevelQueue(object):
     def __init__(self, priority_cap, unused_inner_data_structure):
         self.data = []
 
-    def insert(self, unused_priorities, element)
+    def insert(self, unused_priorities, element):
         self.data.append(element)
 
     def get_first(self):
@@ -44,23 +46,68 @@ class LastLevelQueue(object):
     def __len__(self):
         return len(self.data)
 
+def choose(n, k):
+    """
+    A fast way to calculate binomial coefficients by Andrew Dalke (contrib).
+    """
+    if 0 <= k <= n:
+        ntok = 1
+        ktok = 1
+        for t in xrange(1, min(k, n - k) + 1):
+            ntok *= n
+            ktok *= t
+            n -= 1
+        return ntok // ktok
+    else:
+        return 0
 
-def a_star_solve(board, cost_function, heuristic_function):
-    """Solves the board."""
-    initial_state = model.State(initial_board, 0, None)
-    queue = NthDimPriorityQueue([150, 150],
-                                [NthDimPriorityQueue, LastLevelQueue])
-    queue.insert([cost_function(initial_state),
-                  heuristic_function(initial_state)], initial_state)
+def slim_heuristic(state):
+    board = state.board
+    states_left = board.tiles_left()
 
-    solution = None
-    while queue:
-        element = queue.get_first()
-        if element.is_empty():
-            solution = element
-            break
-        for new_state in element.get_new_boards():
-            queue.insert([cost_function(new_state),
-                          heuristic_function(new_state)], new_state)
+    combinations = [choose(n, 2) for n in board.get_border_sets() if n > 1]
+    if combinations:
+        right_hand_thingy = reduce(int.__mul__, combinations)
+        return min(states_left, right_hand_thingy)
+    else:
+        return states_left
 
-    return solution
+def fat_heuristic(state):
+    board = state.board
+    removable_tiles = sum(n for n in board.get_border_sets() if n > 1)
+    return board.tiles_left() - removable_tiles
+
+
+class InformedSearch(BaseStrategy):
+
+    def __init__(self, cost_function, heuristic_function):
+        self.cost = cost_function
+        self.heuristic = heuristic_function
+
+        self.data = NthDimPriorityQueue([150, 150],
+                [NthDimPriorityQueue, LastLevelQueue])
+
+    def initialize(self, initial_board):
+        self.solution = None
+        self.add_boards([model.State(initial_board, 0, None)])
+
+    def add_boards(self, boards):
+        for new_state in boards:
+            h = self.heuristic(new_state)
+            self.data.insert([self.cost(new_state) + h, h], new_state)
+
+    def _get_next(self):
+        return self.data.get_first()
+
+class Greedy(InformedSearch):
+
+    def __init__(self, heuristic_function):
+        super(Greedy, self).__init__(lambda a: 0, heuristic_function)
+
+def cost_function(state):
+    return state.depth
+
+class AStar(InformedSearch):
+
+    def __init__(self, heuristic_function):
+        super(AStar, self).__init__(cost_function, heuristic_function)
