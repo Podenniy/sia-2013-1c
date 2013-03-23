@@ -7,6 +7,10 @@ import strategies
 from time import time
 from sys import argv
 
+
+logger = logging.getLogger('sia')
+
+
 def main():
     available_strategies = {
         'dfs': strategies.DFS,
@@ -25,10 +29,10 @@ def main():
     }
 
     def usage(msg = ""):
-        logging.debug(msg)
-        logging.debug("Usage: %s board_file_path algorithm [heuristic]", argv[0])
-        logging.debug("Valid algoriths: %s", ' '.join(available_strategies.keys()))
-        logging.debug("Valid heuristics: %s", ' '.join(heuristics.keys()))
+        logger.debug(msg)
+        logger.debug("Usage: %s board_file_path algorithm [heuristic]", argv[0])
+        logger.debug("Valid algoriths: %s", ' '.join(available_strategies.keys()))
+        logger.debug("Valid heuristics: %s", ' '.join(heuristics.keys()))
         exit(0)
 
     if len(argv) < 3:
@@ -58,20 +62,23 @@ def main():
         strategy = available_strategies[strategy_name]()
 
     board = parser.parse_file(board_file_name)
-    logging.debug(board)
+    logger.debug(board)
 
     start = time()
     solution = strategies.solve_with_strategy(board, strategy)
     running_time = time() - start
 
     if solution:
-        logging.info("\nFound solution at depth " + str(board.tiles_left() / 2))
+        logger.info("\nFound solution at depth " + str(board.tiles_left() / 2))
 
-    logging.info("\nStatistics:")
-    logging.info("\tRunning time " + str(running_time))
-    logging.info("\tGenerated states " + str(model.number_of_states))
-    logging.info("\tExpanded nodes " + str(model.number_of_explosions))
-    logging.info("\tFrontier nodes " + str(model.number_of_states - model.number_of_explosions))
+    logger.info("\nStatistics:")
+    logger.info("\tRunning time " + str(running_time))
+    logger.info("\tGenerated states " + str(model.number_of_states))
+    logger.info("\tExpanded nodes " + str(model.number_of_explosions))
+    logger.info("\tFrontier nodes " + str(model.number_of_states - model.number_of_explosions))
 
 if __name__ == '__main__':
+    FORMAT = '%(message)s'
+    logging.basicConfig(format=FORMAT)
+    logger.setLevel(logging.INFO)
     main()

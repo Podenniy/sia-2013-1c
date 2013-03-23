@@ -4,6 +4,10 @@ import model
 
 from strategies import BaseStrategy
 
+
+logger = logging.getLogger('sia')
+
+
 class NthDimPriorityQueue(object):
 
     def __init__(self, priority_caps, inner_data_structures):

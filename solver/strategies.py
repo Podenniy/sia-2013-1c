@@ -1,5 +1,9 @@
 # ?
+import logging
 import model
+
+
+logger = logging.getLogger('sia')
 
 
 def is_solution(board):
@@ -38,8 +42,8 @@ class BaseStrategy(Strategy):
         item = self._get_next()
         if not item:
             return None
-        if logging.isEnabledFor('debug'):
-            logging.debug('Analyzing %s', item)
+        if logger.isEnabledFor('debug'):
+            logger.debug('Analyzing %s', item)
         if item.is_empty():
             self.set_solution(item)
         return item
@@ -90,12 +94,12 @@ class IterativeDeepening(BaseStrategy):
     def add_boards(self, boards):
         for board in boards:
             if board.depth >= self.target_depth:
-                if logging.isEnabledFor('debug'):
-                    logging.debug("Add %s to secondary queue/stack", board)
+                if logger.isEnabledFor('debug'):
+                    logger.debug("Add %s to secondary queue/stack", board)
                 self.secondary_data.append(board)
             else:
-                if logging.isEnabledFor('debug'):
-                    logging.debug("Add %s to primary queue/stack", board)
+                if logger.isEnabledFor('debug'):
+                    logger.debug("Add %s to primary queue/stack", board)
                 self.data.append(board)
 
 
