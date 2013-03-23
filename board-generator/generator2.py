@@ -1,11 +1,12 @@
-import random
 import collections
+import random
+import sys
 
+
+lines = 12
+width = 12
 
 class Position(object):
-
-    LIM_X = 12
-    LIM_Y = 12
 
     DELTAS = [(-1, 0), (0, -1), (1, 0), (0, 1)]
 
@@ -17,7 +18,7 @@ class Position(object):
         return Position(self.x + delta[0], self.y + delta[1])
 
     def inside_board(self):
-        return 0 <= self.x < self.LIM_X and 0 <= self.y < self.LIM_Y
+        return 0 <= self.x < lines and 0 <= self.y < width
 
     def neighbors(self):
         return [
@@ -35,14 +36,14 @@ class Position(object):
         return hasattr(other, 'x') and hasattr(other, 'y') and \
                other.x == self.x and other.y == self.y
 
-KINDS = [i for i in xrange(36)] * 2
+KINDS = []
 
 def main():
 
-    initial_position = Position(6, 6)
+    initial_position = Position(lines/2, width/2)
     queue = collections.deque([initial_position])
     seen = collections.deque([initial_position])
-    positions = [[0 for _ in range(12)] for __ in range(12)]
+    positions = [[0 for _ in range(width)] for __ in range(lines)]
 
     while queue:
         top = queue.popleft()
@@ -58,8 +59,14 @@ def main():
         positions[pos1.x][pos1.y] = kind
         positions[pos2.x][pos2.y] = kind
 
-    print '12'
+    print lines
     print '\n'.join(' '.join(map(str, line)) for line in positions)
 
 if __name__ == '__main__':
+    sys.argv.pop(0)
+    if sys.argv:
+        lines = int(sys.argv.pop(0))
+    if sys.argv:
+        width = int(sys.argv.pop(0))
+    KINDS = [i for i in xrange(lines * width / 4)] * 2
     main()
