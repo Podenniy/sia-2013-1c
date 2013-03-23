@@ -106,13 +106,17 @@ class IterativeDeepening(BaseStrategy):
 def solve_with_strategy(board, strategy):
 
     strategy.initialize(board)
+    seen = set()
 
     while not strategy.done():
         to_consider = strategy.get_next()
         if not to_consider:
             break
         new_boards = to_consider.get_new_boards()
-        strategy.add_boards(new_boards)
+        for board in new_boards:
+            if board not in seen:
+                seen.add(board)
+                strategy.add_boards([board])
 
     return strategy.get_result()
 

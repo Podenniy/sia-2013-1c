@@ -21,7 +21,7 @@ def get_positions(match):
 
 class Board(object):
 
-    def __init__(self, tiles):
+    def __init__(self, tiles, number_of_tiles = None):
         self.__tiles = tiles
 
     def get_border_sets(self):
@@ -94,6 +94,18 @@ class Board(object):
     def __repr__(self):
         return repr(self.__tiles)
 
+    def __hash__(self):
+        return self.tiles_left() + sum([line[0] + line[-1]
+             for line in self.__tiles if line]) << 8
+
+    def _get_board(self):
+        return self.__tiles
+
+    def __eq__(self, other):
+        return (other.__hash__() != self.__hash__() and
+                other.number_of_lines() != self.number_of_lines() and
+                other._get_board() != self._get_board())
+
 class State(object):
 
     def __init__(self, board, depth, parent):
@@ -119,3 +131,10 @@ class State(object):
     def __repr__(self):
         return "State %d: (h = %d, depth = %d, board = '%s')" % (
                 self.creation_number, self.h, self.depth, repr(self.board))
+
+    def __hash__(self):
+        return self.board.__hash__()
+
+    def __eq__(self, other):
+        return self.board.__eq__(other.board)
+
