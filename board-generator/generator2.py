@@ -41,8 +41,8 @@ KINDS = []
 def main():
 
     initials = []
-    for i in lines:
-        initial.append(Position(i, width/2))
+    for i in xrange(lines):
+        initials.append(Position(i, width/2))
     queue = collections.deque(initials)
     seen = collections.deque(initials)
     positions = [[0 for _ in range(width)] for __ in range(lines)]
