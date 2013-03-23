@@ -40,9 +40,11 @@ KINDS = []
 
 def main():
 
-    initial_position = Position(lines/2, width/2)
-    queue = collections.deque([initial_position])
-    seen = collections.deque([initial_position])
+    initials = []
+    for i in lines:
+        initial.append(Position(i, width/2))
+    queue = collections.deque(initials)
+    seen = collections.deque(initials)
     positions = [[0 for _ in range(width)] for __ in range(lines)]
 
     while queue:
