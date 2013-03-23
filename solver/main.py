@@ -23,26 +23,30 @@ heuristics = {
 
 def usage(msg = ""):
     print(msg)
-    print("Usage: " + argv[0] + " algorithm [heuristic]")
+    print("Usage: " + argv[0] + " board_file_path algorithm [heuristic]")
     print("Valid algoriths: " + ' '.join(available_strategies.keys()))
     print("Valid heuristics: " + ' '.join(heuristics.keys()))
     exit(0)
 
-if len(argv) < 2:
+if len(argv) < 3:
     usage()
 
-strategy_name = argv[1]
+argv.pop(0)
+board_file_name = argv.pop(0)
+
+strategy_name = argv.pop(0)
 if strategy_name not in available_strategies:
     usage("Pick a valid strategy name")
 
 heuristic = None
 if strategy_name in needs_heuristics:
-    if len(argv) != 3:
+    if not len(argv):
         usage(strategy_name + " needs an heuristic")
-    if argv[2] not in heuristics:
+    heuristic_name = argv.pop(0)
+    if heuristic_name not in heuristics:
         usage("Pick a valid heuristic name")
+    heuristic = heuristics[heuristic_name]
 
-    heuristic = heuristics[argv[2]]
     strategy = available_strategies[strategy_name](heuristic)
 
 elif strategy_name == 'iterative':
@@ -50,7 +54,7 @@ elif strategy_name == 'iterative':
 else:
     strategy = available_strategies[strategy_name]()
 
-board = parser.parse_file('../board-generator/board1')
+board = parser.parse_file(board_file_name)
 print(board)
 
 start = time()
