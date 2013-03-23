@@ -14,8 +14,8 @@ available_strategies = {
 needs_heuristics = ['A*', 'greedy']
 
 heuristics = {
-    'slim': None,
-    'fat': None,
+    'slim': strategies.slim_heuristic,
+    'fat': strategies.fat_heuristic,
 }
 
 def usage(msg = ""):

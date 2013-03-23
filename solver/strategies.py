@@ -92,6 +92,33 @@ class IterativeDeepening(BaseStrategy):
                 self.data.append(board)
 
 
+def choose(n, k):
+    """
+    A fast way to calculate binomial coefficients by Andrew Dalke (contrib).
+    """
+    if 0 <= k <= n:
+        ntok = 1
+        ktok = 1
+        for t in xrange(1, min(k, n - k) + 1):
+            ntok *= n
+            ktok *= t
+            n -= 1
+        return ntok // ktok
+    else:
+        return 0
+
+def slim_heuristic(board):
+    states_left = board.tiles_left()
+
+    combinations = [choose(n, 2) for n in board.get_border_sets() if n > 1]
+    right_hand_thingy = reduce(int.__mul__, combinations)
+
+    return min(states_left, right_hand_thingy)
+
+def fat_heuristic(board):
+    removable_tiles = sum(n for n in board.get_border_sets() if n > 1)
+    return board.tiles_left() - removable_tiles
+
 def solve_with_strategy(board, strategy):
 
     strategy.initialize(board)

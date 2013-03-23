@@ -23,6 +23,21 @@ class Board(object):
     def __init__(self, tiles):
         self.__tiles = tiles
 
+    def get_border_sets(self):
+        """Returns a list of sets of removable tiles.
+        Each set is represented as the number of tiles in that set.
+        """
+
+        tile_sets = {}
+        for line in self.__tiles:
+            line_len = len(line)
+            if line_len > 0:
+                tile_sets[line[0]] = tile_sets.get(line[0], 0) + 1
+            if line_len > 1:
+                tile_sets[line[-1]] = tile_sets.get(line[-1], 0) + 1
+
+        return tile_sets.values()
+
     def get_matches(self):
         """Returns a list of tuples with the possible moves.
         (token1, token2). token1 and token2 are integers in the range
@@ -75,6 +90,9 @@ class Board(object):
 
     def is_empty(self):
         return not len([line for line in self.__tiles if len(line)])
+
+    def tiles_left(self):
+        return sum(len(l) for l in self.__tiles)
 
     def __repr__(self):
         return repr(self.__tiles)
