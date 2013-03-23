@@ -37,9 +37,9 @@ class BaseStrategy(Strategy):
     def get_next(self):
         item = self._get_next()
         if not item:
-            print 'No items left, no solution was found'
             return None
-        print 'Analyzing %s' % item
+        if logging.isEnabledFor('debug'):
+            logging.debug('Analyzing %s', item)
         if item.is_empty():
             self.set_solution(item)
         return item
@@ -78,7 +78,6 @@ class IterativeDeepening(BaseStrategy):
 
     def _get_next(self):
         if not self.data:
-            print "No states found in primary stack/queue, swapping."
             self.data = self.secondary_data
             self.secondary_data = []
             self.target_depth += self.depth
@@ -91,10 +90,12 @@ class IterativeDeepening(BaseStrategy):
     def add_boards(self, boards):
         for board in boards:
             if board.depth >= self.target_depth:
-                print "Add %s to secondary queue/stack" % board
+                if logging.isEnabledFor('debug'):
+                    logging.debug("Add %s to secondary queue/stack", board)
                 self.secondary_data.append(board)
             else:
-                print "Add %s to primary queue/stack" % board
+                if logging.isEnabledFor('debug'):
+                    logging.debug("Add %s to primary queue/stack", board)
                 self.data.append(board)
 
 

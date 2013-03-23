@@ -1,4 +1,5 @@
 # ?
+import logging
 import model
 
 from strategies import BaseStrategy
