@@ -3,6 +3,7 @@ import copy
 
 
 number_of_states = 0
+number_of_explosions = 0
 
 
 def get_lines(match):
@@ -71,10 +72,6 @@ class Board(object):
                     matches.append((~line, ~second_line))
         return matches
 
-    def get_new_boards(self):
-        matches = self.get_matches()
-        return [self.mutate_board(match) for match in matches]
-
     def mutate_board(self, match):
         new_tiles = copy.deepcopy(self.__tiles)
 
@@ -111,6 +108,9 @@ class State(object):
         return self.board.is_empty()
 
     def get_new_boards(self):
+        global number_of_explosions
+        number_of_explosions += 1
+
         matches = self.board.get_matches()
         return [State(self.board.mutate_board(match), self.depth + 1, self)
                 for match in matches]

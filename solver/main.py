@@ -1,6 +1,8 @@
 import parser
 import strategies
+import model
 
+from time import time
 from sys import argv
 
 available_strategies = {
@@ -50,7 +52,17 @@ else:
 board = parser.parse_file('../board-generator/board1')
 print(board)
 
-for new_board in board.get_new_boards():
-    print(new_board)
+start = time()
+solution = strategies.solve_with_strategy(board, strategy)
+running_time = time() - start
 
-print strategies.solve_with_strategy(board, strategy)
+if solution:
+    print("\nFound solution at depth " + str(board.tiles_left() / 2))
+    print(solution)
+
+print("\nStatistics:")
+print("\tRunning time " + str(running_time))
+print("\tGenerated states " + str(model.number_of_states))
+print("\tExpanded nodes " + str(model.number_of_explosions))
+print("\tFrontier nodes " + str(model.number_of_states - model.number_of_explosions))
+

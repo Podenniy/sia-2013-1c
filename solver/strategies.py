@@ -29,7 +29,10 @@ class BaseStrategy(Strategy):
         """Since Mahjong has a fixed depth, we'll stop with the first solution
         we find in both BFS (this is always the case, no matter what the
         problem is) and DFS."""
-        return self.solution is not None
+        return self.solution is not None or self._is_empty()
+
+    def _is_empty(self):
+        return not len(self.data)
 
     def get_next(self):
         item = self._get_next()
@@ -50,7 +53,7 @@ class BaseStrategy(Strategy):
     def get_result(self):
         if hasattr(self, 'solution'):
             return self.solution
-        return 'No Solution'
+        return None
 
 class BFS(BaseStrategy):
 
@@ -69,6 +72,9 @@ class IterativeDeepening(BaseStrategy):
         self.target_depth = depth
         self.secondary_data = []
         self.use_dfs_strategy = True
+
+    def _is_empty(self):
+        return not len(self.data) and not len(self.secondary_data)
 
     def _get_next(self):
         if not self.data:
