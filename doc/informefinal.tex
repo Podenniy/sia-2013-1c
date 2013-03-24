@@ -90,32 +90,41 @@
 
 \section{Definición del problema}
 
+% TODO: REfactorear esta seccion
+
 Definimos el tablero de juego como una matriz de números enteros, y cada número representa una ficha. Números distintos corresponden a fichas distintas. 
 El objetivo del juego es vaciar el tablero, quitando todas las fichas. Las fichas se sacan de a pares, siempre siendo ambas del mismo tipo, y solamente pueden ser elegibles 
 para ser sacadas del tablero si se encuentran en los bordes izquierdo o derecho del tablero. No hay necesidad de que ambas fichas esten en el mismo borde. Cabe destacar 
 que podría ocurrir que en un determinado momento no haya posibilidad de quitar más fichas. En este caso, el juego se da por perdido.
 
 \label{problem-info}
-Representamos el proceso del juego como una sucesión de estados que están dispuestos en un grafo sin ciclos, o \textit{árbol}. Los estados están conectados si se puede pasar de uno 
-al otro, haciendo un movimiento del juego \textit{válido}. Teniendo esto en cuenta, la raíz de nuestro árbol será el estado inicial, en el que tablero tiene todas sus fichas. Algo que 
-se deduce de este planteo, es que todos los estados que estén a la misma altura $h$, tendrán la misma cantidad de fichas, por que para llegar a él hubo que realizar la misma cantidad 
-de movimientos, $n$. Esto nos lleva a poder afirmar que todas las soluciones estarán a la misma altura (la máxima) y que esta altura es conocida para un tablero de $N$ fichas: es 
+Representamos el proceso del juego como una sucesión de estados que están dispuestos en un grafo dirigido sin ciclos. Los estados están conectados si se puede pasar de uno 
+al otro, haciendo un movimiento del juego \textit{válido}. Teniendo esto en cuenta, el primer nodo de nuestro grafo es el estado inicial, en el que tablero tiene todas sus fichas. Algo que 
+se deduce de este planteo, es que todos los estados que estén a la misma altura $h$, tendrán la misma cantidad de fichas, por que para llegar a él hubo que aplicar la misma cantidad de reglas, $h$.
+Esto nos lleva a poder afirmar que todas las soluciones estarán a la misma altura (la máxima) y que esta altura es conocida para un tablero de $N$ fichas: es 
 $\frac{N}{2}$, ya que en cada movimiento válido se pueden sacar solo 2 fichas.
 
-\section{Heurísticas}
+\section{Implementacion}
+
+    % TODO: Detallar que siempre nos quedamos con la primer solucion y que hacemos eliminacion de repetidos
+
+    \subsection{Función de costo}
+
+    Nuestra función de costo consta simplemente de contabilizar la cantidad de piezas que fueron removidas hasta llegar al estado en cuestión. Es decir, toda regla aplicada tiene costo 2. \\
 
     \subsection{Primer heurística}
+    % TODO: Esta explicacion no explica nada entendible
     
     Como primer heurística propusimos tomar en cuenta el mínimo entre la cantidad de estados que faltan para llegar a una solución (recordemos la información que tenemos del 
     problema según lo explicado en la sección \ref{problem-info}) y la productoria de la combinatoria 2,N 
     siendo N el tamaño de cada uno de los conjuntos de fichas iguales en los bordes izquierdo o derecho.\\
 
-    La idea tras esta fórmula es recorrer primero las ramas del árbol que tengan más 
+    La idea tras esta fórmula es recorrer primero las ramas del árbol que tengan más posibilidades de remover fichas.
 
     Cabe destacar que por definición esta heurística es admisible.
 
 
-    \[ h(x) = min(\text{\# estados que faltan}, \Pi_{n=0}^{N} { \text{tamaño conjunto n} \choose 2} )\] 
+    \[ h(x) = min(\text{\# fichas}, \Pi_{n=0}^{N} { \text{\# fichas en el n-esimo conjunto} \choose 2} )\] 
 
     siendo N la cantidad de conjuntos de fichas iguales en los bordes.
     
@@ -139,19 +148,18 @@ $\frac{N}{2}$, ya que en cada movimiento válido se pueden sacar solo 2 fichas.
 
     siendo N la cantidad total de fichas restantes en el tablero.
 
-\section{Función de costo}
+\section{Resultados}
 
-    Nuestra función de costo consta simplemente de contabilizar la cantidad de piezas que fueron removidas hasta llegar al estado en cuestión. Es la más sencilla y la que más sentido
-    tiene, ya que se corresponde con la realidad. \\
+% TODO: Mencionar que hya una tabla de esto al final
 
-\section{Búsquedas no informadas}
+\subsection{Búsquedas no informadas}
 
     \subsection{Depth First Search}
     Dada las características del problema, este es el algoritmo que mejor se comporta, ya que baja rápidamente por el árbol y tiene más posibilidades de encontrar una solución primero.
     Solución que será la aceptada porque como sabemos, todas las soluciones son igualmente buenas.
     
     \subsection{Breath First Search}
-    En contraposición con el \textit{DFS}, este algoritmo tiene una perfomance pobre, ya que explora muchos estados de más, al hacer una búsqueda "a lo ancho". También le juega en 
+    En contraposición con el \textit{DFS}, este algoritmo tiene una perfomance pobre, ya que explora muchos estados de más, al hacer una búsqueda \"a lo ancho". También le juega en 
     contra que en nuestro problema no existe una solución óptima o camino óptimo, o más bien, cualquier solución es óptima, y cualquier camino es óptimo. Por lo cual no nos interesa 
     demorarnos en analizar todos los caminos posibles.
     
@@ -159,18 +167,20 @@ $\frac{N}{2}$, ya que en cada movimiento válido se pueden sacar solo 2 fichas.
     Como su definición lo dice, este algoritmo mezcla las características del \textit{DFS} con las del \textit{BFS}, por lo que en nuestro problema, tiene aspectos positivos (los del 
     \textit{DFS}) y también negativos (los del \textit{BFS}). 
  
-\section{Búsquedas informadas}
+\subsection{Búsquedas informadas}
     
-    \subsection{Greedy Search}
-    
-    Este algoritmo, por definición, se centra en la heurística elegida y varía su perfomance de acuerdo a ella. En nuestro problema fue una de las mejores estrategias de resolución, 
-    solo superada por \textit{DFS}.
-
     \subsection{A*}
     
-    El algoritmo A* agrega a la función heurística, una función de costo, para contabilizar el costo o esfuerzo que tomó llegar hasta cierto estado. En nuestro problema tuvo una 
-    perfomance decente, variando con el tipo de heurística elegida. Cabe destacar que en el caso de la heurística trivial, este algoritmo se transforma en un \textit{DFS}, la mejor 
-    estrategia.
+    La naturaleza de las soluciones al problema hace que el \textit{A*} no sea el mejor algoritmo a aplicar. Al igual que el \textit{BFS}, intenta encontrar la solucion de menor costo.
+    Pero como todas las soluciones son del mismo costo, esto a veces implica que el algoritmo vuelve sobre sus pasos para analizar un estado de menor costo.
+    Y eso lo lleva a dejar para mas adelante caminos mas cercanos a la solucion.
+    Cabe destacar que en el caso de la heurística trivial, este algoritmo se comporta como un \textit{DFS}.
+
+    \subsection{Greedy Search}
+    
+    Este algoritmo, por definición, se centra en la heurística elegida y varía su perfomance de acuerdo a ella.
+    A diferencia del \textit{A*}, al no tener una funcion de costo no hace backtracking innecesario y con una buena heuristica, es un algoritmo adecuado para el problema.
+
 
 \section{Conclusiones}
     Dado que sabemos de entrada la altura del árbol en el cual estarán las soluciones nos interesa llegar rápidamente a esa altura. Además, como sabemos que todas ellas serán 
