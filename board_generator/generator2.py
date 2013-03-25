@@ -34,10 +34,10 @@ class Position(object):
 
 def get_positions(lines, width):
 
-    kinds = [i for i in xrange(lines * width / 4)] * 2
+    kinds = [i for i in range(int(lines * width / 4))] * 2
     initials = []
-    for i in xrange(lines):
-        initials.append(Position(i, width/2, lines, width))
+    for i in range(lines):
+        initials.append(Position(i, int(width/2), lines, width))
     queue = collections.deque(initials)
     seen = collections.deque(initials)
     positions = [[0 for _ in range(width)] for __ in range(lines)]
@@ -60,14 +60,16 @@ def get_positions(lines, width):
 
 def main():
     sys.argv.pop(0)
+    lines = 5 
+    width = 8
     if sys.argv:
         lines = int(sys.argv.pop(0))
     if sys.argv:
         width = int(sys.argv.pop(0))
 
     positions = get_positions(lines, width)
-    print lines
-    print '\n'.join(' '.join(map(str, line)) for line in positions)
+    print(lines)
+    print('\n'.join(' '.join(map(str, line)) for line in positions))
 
 if __name__ == '__main__':
     main()
