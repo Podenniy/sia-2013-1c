@@ -1,9 +1,9 @@
-\section*{Resultados}
+\section*{Anexo: Resultados}
 
 \begin{table}[H]
 
 \begin{tabular}{l|r|r|r|r}
-Algoritmo & Tiempo (segs) & Estados & Explotados & Frontera \\
+Algoritmo & Tiempo (segs) & Estados & Expandidos & Frontera \\
 \hline
 DFS & 0.00301599502563 & 31 & 17 & 14 \\
 BFS & 0.124269962311 & 472 & 472 & 0 \\
@@ -20,4 +20,23 @@ A* fat & 0.132388830185 & 472 & 472 & 0 \\
 
 \end{table}
 
+\begin{table}[H]
+
+\begin{tabular}{l|r|r|r|r}
+Algoritmo & Tiempo (segs) & Estados & Expandidos & Frontera \\
+\hline
+A* fat & 21.61545286 & 100443.51 & 27311.39 & 73132.12 \\
+A* slim & 39.68114223 & 98606.65 & 27098.05 & 71508.6 \\
+BFS & 20.0964277 & 100443.51 & 27361.04 & 73082.47 \\
+DFS & 0.010342038 & 81.33 & 24.87 & 56.46 \\
+Greedy fat & 0.018111382 & 128.5 & 21 & 107.5 \\
+Greedy slim & 0.02189836 & 130.69 & 36.62 & 94.07 \\
+Iterative 3 & 20.72738798 & 99684.76 & 26970.21 & 72714.55 \\
+Iterative 5 & 21.6782024 & 100443.51 & 27361.04 & 73082.47
+\end{tabular}
+
+\caption{Promedio de los resultados de 100 ejecuciones}
+\label{averages}
+
+\end{table}
 
