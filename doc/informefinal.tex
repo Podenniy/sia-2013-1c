@@ -90,6 +90,8 @@
 
 \section{Definición del problema}
 
+    El problema a resolver es el juego Mahjong (también conocido como Taipei). En particular, este trabajo se focaliza en resolver el juego en su versión de dos dimensiones. \\
+
     El problema se definió de la siguiente manera:
 
     \begin{itemize}
@@ -104,61 +106,65 @@
 
     Debido a la naturaleza del problema, dado el estado inicial se conoce el costo de ruta de la solución (si existe): será igual a la cantidad de fichas en el tablero.
 
-    Otra característica que presenta el problema es que las soluciones son indistintas unas de otras, ya que todas tendrán el mismo costo de ruta. Esto lleva a que no haya una solución más eficiente que otra.
+    Otra característica que presenta el problema es que las soluciones son indistintas unas de otras, ya que todas tendrán el mismo costo de ruta. Esto lleva a que no haya una 
+    solución más eficiente que otra.
 
-    El grafo de búsqueda es acíclico y dirigido. Dado un estado con dos acciones posibles, tomar una de ellas conduce a otro estado que siempre contará con la acción que no se tomó en su conjunto de acciones posibles. Como corolario de esto, siempre que un estado tenga más de una acción posible (lo cual es muy frecuente, o alcanzar la solución se convierte en un problema trivial), se tendrá más de un camino posible para llegar a una solución, por lo que evitar considerar estados más de una vez es indispensable.
+    El grafo de búsqueda es acíclico y dirigido. Dado un estado con dos acciones posibles, tomar una de ellas conduce a otro estado que siempre contará con la acción que no se 
+    tomó en su conjunto de acciones posibles. Como corolario de esto, siempre que un estado tenga más de una acción posible (lo cual es muy frecuente, o alcanzar la solución se 
+    convierte en un problema trivial), se tendrá más de un camino posible para llegar a una solución, por lo que evitar considerar estados más de una vez es indispensable.
 
     \subsection{Función de costo}
 
-    La función de costo propuesta consta simplemente de contabilizar la cantidad de piezas que fueron removidas hasta llegar al estado en cuestión. Es decir, toda regla aplicada 
+    La función de costo propuesta consta simplemente de contabilizar la cantidad de fichas que fueron removidas hasta llegar al estado en cuestión. Es decir, toda regla aplicada 
     tiene costo 2. \\
 
+    \subsection{Heurística trivial}
+
+    La heurística trivial en este caso, sería contar la cantidad de fichas que restan sacar del tablero. Esta heurística es igual al costo de llegar a la solución, 
+    por lo que puede pensarse como la mejor aproximación posible.
+    %TODO está bien dicho que es la mejor aproximación?? Si fuera no admisible no sería mejor?
+
+    \[ h(n) = N \] 
+
+    Done $N$ es la cantidad total de fichas restantes en el tablero.
+
     \subsection{Primer heurística - Ramas angostas}
-    
+        
+    Como primer heurística se propuso el mínimo entre el número de fichas en el tablero y la cantidad de formas de sacar las fichas con posibilidad de removidas 
+    en la siguiente acción. Esta segunda cantidad viene dada por la productoria, para cada tipo de ficha, de la combinatoria ${ \# c_i \choose 2}$,  
+    donde $c_i$ es el conjunto de fichas de tipo $i$.
+
     \[ h(n) = \min \left (\text{\# F}, \Pi_{i=1}^{k} {\# c_i \choose 2} \right )\] 
 
     Donde:
     \begin{itemize}
         \item $F$ es el conjunto de fichas en el tablero.
-        \item $k$ es la cantidad de tipos de fichas.
+        \item $k$ es la cantidad de tipos de fichas que pueden ser removidas.
         \item $c_i$ es el conjunto de fichas de tipo $i$.
     \end{itemize}
 
-    El objetivo de la heurística es explorar aquellas ramas donde menos decisiones se deben tomar. Para lograr esto, se calcula, para cada tipo de fichas, cuántas posibles elecciones hay para eliminarlas. Esto significa, si hay tres fichas en los bordes del mismo tipo, hay tres posibles elecciones de parejas, y el valor de la heurística para ese estado será mayor que para un estado en el cual sólo hay dos fichas del mismo tipo en los bordes.
+    El objetivo de la heurística es explorar aquellas ramas donde menos decisiones se deben tomar. Para lograr esto, se calcula, para cada tipo de fichas, cuántas posibles 
+    elecciones hay para eliminarlas. Esto significa, si hay tres fichas en los bordes del mismo tipo, hay tres posibles elecciones de parejas, y el valor de la heurística para 
+    ese estado será mayor que para un estado en el cual sólo hay dos fichas del mismo tipo en los bordes.
 
-
-    Como primer heurística se propuso tomar en cuenta el mínimo entre la cantidad de fichas restantes en el tablero y la productoria de la combinatoria  
-    ${N \choose 2}$ siendo N el tamaño de cada uno de los conjuntos de fichas iguales en los bordes izquierdo o derecho.\\
-
-    %TODO: Esto es como medio en el aire...
-    La idea trás esta fórmula es recorrer primero las ramas del árbol que tengan más posibilidades de remover fichas.
-
-    Cabe destacar que por definición esta heurística es admisible, ya que nunca sobreestimará el costo de llegar a la solución, el cual, para la función de costo propuesta, es 
-    igual a la cantidad de piezas que quedan en el tablero, lo cual es igual al doble de la cantidad de estados que faltan para llegar a la solución.
-
-
-
-    siendo N la cantidad de conjuntos de fichas iguales en los bordes.
+    Cabe destacar que por definición esta heurística es admisible, ya que nunca sobreestimará el costo de llegar a la solución desde el estado actual, el cual, para la función de 
+    costo propuesta, es igual a la cantidad de fichas que quedan en el tablero.
     
     \subsection{Segunda heurística}
 
     Como segunda heurística se propuso la sencilla resta entre la cantidad total de fichas restantes en el tablero y la cantidad de fichas con posibilidad de ser retiradas en el
     siguiente movimiento.\\
 
-    De nuevo, por construcción esta heurística es admisible, ya que siempre es menor que el costo de llegar a la solución ($N$).
+         \[ h(n) = N - K\] 
 
-     \[ h(x) = N - K\] 
+    Donde:
+    
+    \begin{itemize}
+        \item $N$ es la cantidad total de fichas restantes en el tablero
+        \item $K$ es la cantidad de fichas elegibles para ser retiradas del tablero.
+    \end{itemize}
 
-    siendo N la cantidad total de fichas restantes en el tablero, y K la cantidad de fichas elegibles para ser retiradas del tablero.
-
-    \subsection{Heurística trivial}
-
-    La heurística trivial en este caso, sería contar la cantidad de fichas que restan sacar del tablero. Esta heurística transforma el algoritmo A* en un simple DFS, 
-    ya que siempre exploraría primero los nodos hijos. Esta heurística es igual al costo de llegar a la solución, por lo que puede pensarse como la mejor aproximación posible.
-
-    \[ h(x) = N \] 
-
-    siendo N la cantidad total de fichas restantes en el tablero.
+    De nuevo, por construcción esta heurística es admisible, ya que siempre es menor que el costo de llegar a la solución.
 
 \section{Análisis y resultados}
 
@@ -166,7 +172,8 @@
 
     \subsubsection{Depth First Search}
     \label{sec:dfs}
-    Dada las características del problema, este es el algoritmo no informado que mejor se comporta, ya que baja rápidamente por el árbol y tiene más posibilidades de encontrar una solución primero.
+    Dada las características del problema, este es el algoritmo no informado que mejor se comporta, ya que baja rápidamente por el árbol y tiene más posibilidades de 
+    encontrar una solución primero.
     Solución que será la aceptada porque como sabemos, todas las soluciones son igualmente buenas (Ver sección \ref{implementation-details}).\\
 
     Un estado del tablero puede ser irresoluble si la última pareja de cada uno de dos o más tipos de fichas se encuentran intercaladas.
@@ -227,7 +234,8 @@
 
     Podemos ver que \textit{Greedy Fat} mejora los resultados del \textit{DFS}.
     Creemos que esto es debido a que el uso de la heuristica le permite evitar los estados irresolubles (Vease la seccion \ref{sec:dfs}).
-    Si el cálculo de una función que responda si un tablero es irresoluble fuera eficiente en tiempo y memoria, tal función sería potencialmente una mejor heurística planteada de forma: $h(n_{irresoluble}) = \inf$, $h(n_{no irresoluble}) = \#F$.
+    Si el cálculo de una función que responda si un tablero es irresoluble fuera eficiente en tiempo y memoria, tal función sería potencialmente una mejor heurística 
+    planteada de forma: $h(n_{irresoluble}) = \inf$, $h(n_{no irresoluble}) = \#F$.
 
 \section{Conclusiones}
     Dado que se conoce desde un principio la altura del árbol en el cual estarán las soluciones, interesa llegar rápidamente a esa altura.
