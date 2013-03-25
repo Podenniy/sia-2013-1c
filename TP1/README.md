@@ -1,8 +1,6 @@
 sia-2013-1c
 ===========
 
-Repositorio para los trabajos de la materia Sistemas de Inteligencia Artificial del ITBA.
-
 Para correr el programa seguir los siguientes pasos:
 1)Abrir una consola y posicionarse en la carperta raíz del proyecto.
 2)Correr el comando: python ./solver/main.py path_to_board_file algorithm [heuristic]
