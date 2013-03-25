@@ -183,17 +183,17 @@
     Puede tener hijos y estos tambien seran irresolubles.
     Cuando esta situación se dá, el DFS expande una gran cantidad de estados que son irresolubles.
 
-    %TODO: insetar datos para backupear esto ya sea antes o despues de las aseveraciones.
+    En el cuadro \ref{averages} podemos ver que este algoritmo presenta en promedio un buen tiempo de ejecucion y una cantidad pequeña de nodos expandidos.
     
     \subsubsection{Breath First Search}
     En contraposición con el \textit{DFS}, este algoritmo tiene una perfomance pobre, ya que explora muchos estados de más, al hacer una búsqueda ``a lo ancho''.
     También le juega en contra que para este problema no existe una solución óptima o camino óptimo, o más bien, cualquier solución es óptima, y cualquier camino es óptimo. 
     Por lo cual no nos interesa demorarnos en analizar todos los caminos posibles.
 
-    Se puede constatar esto en la tabla \ref{crappy-best}, donde se muestra el mejor resultado encontrado para el \textit{BFS}.
-    En esta tabla vemos que los algoritmos \textit{DFS} y \textit{Greedy} mejoran ampliamente los resultados de este algoritmo.
+    En los cuadros \ref{crappy-best} y \ref{averages} vemos que los algoritmos \textit{DFS} y \textit{Greedy} mejoran ampliamente los resultados de este algoritmo.
 
     \subsubsection{Iterative Deepening}
+
     Como su definición lo dice, este algoritmo mezcla las características del \textit{DFS} con las del \textit{BFS}, por lo que para este problema, tiene aspectos positivos (los del 
     \textit{DFS}) y también negativos (los del \textit{BFS}). 
     El elemento de \textit{BFS} del algoritmo lo hace menos eficiente que el \textit{DFS}.
@@ -207,8 +207,7 @@
     Y eso lo lleva a dejar para más adelante caminos más cercanos a la solución. \\
     Cabe destacar que en el caso de la heurística trivial, este algoritmo se comporta como un \textit{DFS}.
 
-    En el cuadro \ref{crappy-best} se ve el mejor resultado encontrado para este algoritmo.
-    En esta tabla vemos que los algoritmos \textit{DFS} y \textit{Greedy} mejoran ampliamente los resultados de este algoritmo.
+    En los cuadros \ref{crappy-best} y \ref{averages} vemos que los algoritmos \textit{DFS} y \textit{Greedy} mejoran ampliamente los resultados de este algoritmo.
 
     \subsubsection{Greedy Search}
     
