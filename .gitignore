@@ -20,3 +20,6 @@ __pycache__
 *.toc
 *.log
 
+!presentacion.pdf
+!informefinal.pdf
+
