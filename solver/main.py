@@ -29,10 +29,10 @@ def main():
     }
 
     def usage(msg = ""):
-        logger.debug(msg)
-        logger.debug("Usage: %s board_file_path algorithm [heuristic]", argv[0])
-        logger.debug("Valid algoriths: %s", ' '.join(available_strategies.keys()))
-        logger.debug("Valid heuristics: %s", ' '.join(heuristics.keys()))
+        print(msg)
+        print("Usage: %s board_file_path algorithm [heuristic]" % argv[0])
+        print("Valid algoriths: %s" % ' '.join(available_strategies.keys()))
+        print("Valid heuristics: %s" % ' '.join(heuristics.keys()))
         exit(0)
 
     if len(argv) < 3:

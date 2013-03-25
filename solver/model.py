@@ -118,20 +118,14 @@ def count_kinds(board, kind):
 
 class State(object):
 
-    def __init__(self, board, depth, parent, kinds=None):
+    def __init__(self, board, depth, parent):
         self.board = board
         self.depth = depth
         self.parent = parent
-        self.kinds = kinds
         self.h = 0
         global number_of_states
         self.creation_number = number_of_states
         number_of_states += 1
-        if not self.kinds:
-            self.kinds = {
-                kind: count_kinds(self.board, kind)
-                      for kind in range((board.tiles_left() + depth*2)/4)
-            }
 
     def is_empty(self):
         return self.board.is_empty()
@@ -141,15 +135,8 @@ class State(object):
         number_of_explosions += 1
 
         matches = self.board.get_matches()
-        new_states = []
-        for match in matches:
-            kind = self.board.get_kind_for_match(match)
-            new_kinds = copy.deepcopy(self.kinds)
-            new_kinds[kind] -= 2
-            new_state = State(self.board.mutate_board(match), self.depth + 1,
-                              self, new_kinds)
-            new_states.append(new_state)
-        return new_states
+        return [State(self.board.mutate_board(match), self.depth + 1, self)
+                for match in matches]
 
     def __repr__(self):
         return "State %d: (h = %d, depth = %d, board = '%s')" % (
