@@ -124,10 +124,20 @@
     La función de costo propuesta consta simplemente de contabilizar la cantidad de piezas que fueron removidas hasta llegar al estado en cuestión. Es decir, toda regla aplicada 
     tiene costo 2. \\
 
-    \subsection{Primer heurística}
-    % TODO: Esta explicacion no explica nada entendible
-    % TODO: Teberius, any ideas to make things clearer?
+    \subsection{Primer heurística - Ramas angostas}
     
+    \[ h(n) = \min \left (\text{\# F}, \Pi_{i=1}^{k} {\# c_i \choose 2} \right )\] 
+
+    Donde:
+    \begin{itemize}
+        \item $F$ es el conjunto de fichas en el tablero.
+        \item $k$ es la cantidad de tipos de fichas.
+        \item $c_i$ es el conjunto de fichas de tipo $i$.
+    \end{itemize}
+
+    El objetivo de la heurística es explorar aquellas ramas donde menos decisiones se deben tomar. Para lograr esto, se calcula, para cada tipo de fichas, cuántas posibles elecciones hay para eliminarlas. Esto significa, si hay tres fichas en los bordes del mismo tipo, hay tres posibles elecciones de parejas, y el valor de la heurística para ese estado será mayor que para un estado en el cual sólo hay dos fichas del mismo tipo en los bordes.
+
+
     Como primer heurística se propuso tomar en cuenta el mínimo entre la cantidad de fichas restantes en el tablero y la productoria de la combinatoria  
     ${N \choose 2}$ siendo N el tamaño de cada uno de los conjuntos de fichas iguales en los bordes izquierdo o derecho.\\
 
@@ -138,7 +148,6 @@
     igual a la cantidad de piezas que quedan en el tablero, lo cual es igual al doble de la cantidad de estados que faltan para llegar a la solución.
 
 
-    \[ h(x) = min(\text{\# fichas}, \Pi_{n=0}^{N} { \text{\# fichas en el n-esimo conjunto} \choose 2} )\] 
 
     siendo N la cantidad de conjuntos de fichas iguales en los bordes.
     
