@@ -92,129 +92,101 @@
 
     El problema a resolver es el juego Mahjong (también conocido como Taipei). En particular, este trabajo se focaliza en resolver el juego en su versión de dos dimensiones. \\
 
-    El problema se definió de la siguiente manera:
+    El problema está definido de la siguiente manera:
 
     \begin{itemize}
         \item El estado inicial: el tablero con todas las fichas.
-        \item Conjunto de acciones posibles: sacar un par de fichas del mismo tipo, que se encuentren en los bordes izquierdo o derecho del tablero. Este par no es un par ordenado.
-        \item Modelo de transición: al sacar un par de fichas, se llega a otro estado, con las mismas fichas en las mismas posiciones, excepto por el par de fichas removidas.
+        \item Conjunto de acciones posibles: sacar un par de fichas del mismo tipo, que se encuentren en los bordes izquierdo o derecho del tablero. El orden es indistinto (no es un par ordenado de fichas).
+        \item Modelo de transición: al sacar un par de fichas, se llega a otro estado con las mismas fichas en las mismas posiciones, excepto por el par de fichas removidas.
         \item Condición de solución: el tablero vacío, con todas las fichas removidas.
-        \item Funció costo de ruta: la cantidad de fichas removidas.
+        \item Función costo de ruta: la cantidad de fichas removidas.
     \end{itemize}
 
 \section{Análisis}
 
     \label{sec:problem_properties}
-    Debido a la naturaleza del problema, dado el estado inicial se conoce el costo de ruta de la solución (si existe): será igual a la cantidad de fichas en el tablero.
 
-    Otra característica que presenta el problema es que las soluciones son indistintas unas de otras, ya que todas tendrán el mismo costo de ruta. Esto lleva a que no haya una 
-    solución más eficiente que otra.
+    De la función de costo propuesta y el conjunto de acciones posibles se deduce que toda transición de un estado a otro tiene costo 2.
 
-    El grafo de búsqueda es acíclico y dirigido. Dado un estado con dos acciones posibles, tomar una de ellas conduce a otro estado que siempre contará con la acción que no se 
-    tomó en su conjunto de acciones posibles. Como corolario de esto, siempre que un estado tenga más de una acción posible (lo cual es muy frecuente, o alcanzar la solución se 
-    convierte en un problema trivial), se tendrá más de un camino posible para llegar a una solución, por lo que evitar considerar estados más de una vez es indispensable.
+    Debido a la naturaleza del problema, dado el estado inicial se conoce el costo de ruta de la solución (si es que el tablero es resolvible): el costo será igual a la cantidad de fichas en el tablero.
 
-    \subsection{Función de costo}
+    Otra característica que presenta el problema es que las soluciones son indistintas unas de otras, ya que todas tendrán el mismo costo de ruta. Esto lleva a que no haya una solución más eficiente que otra.
 
-    La función de costo propuesta consta simplemente de contabilizar la cantidad de fichas que fueron removidas hasta llegar al estado en cuestión. Es decir, toda transición
-    de un estado a otro tiene costo 2. \\
+    Dado un estado con dos acciones posibles, tomar una de ellas conduce a otro estado que siempre contará con la acción que no se tomó en su conjunto de acciones posibles. Como consecuencia, siempre que un estado tenga más de una acción posible (lo cual es muy frecuente, o alcanzar la solución se convierte en un problema trivial), se tendrá más de un camino posible para llegar a una solución, por lo que evitar considerar estados más de una vez es necesario. Dadas $n$ acciones posibles, tomar todas ellas en distinto orden genera $n!$ posibles caminos hasta un estado sin esas $n$ acciones, por lo que la detección de estados equivalentes es considerado indispensable.
 
-    \subsection{Heurística trivial}
+\subsection{Heurísticas}
 
-    La heurística trivial en este caso, es contar la cantidad de fichas que restan sacar del tablero. Esta heurística es igual al costo de llegar a la solución desde el estado 
-    actual, por lo que puede pensarse como la mejor aproximación posible.
-    %TODO está bien dicho que es la mejor aproximación?? Si fuera no admisible no sería mejor?
+    En esta sección se utilizarán las siguientes definiciones:
 
-    \[ h(n) = N \] 
+    \begin{itemize}
+        \item $F_n$: conjunto de fichas en el tablero $n$
+        \item $R_n$ es la cantidad de fichas elegibles para ser retiradas del tablero $n$.
+        \item $K_n$: conjunto de los distintos tipos de fichas en el tablero $n$.
 
-    Done $N$ es la cantidad total de fichas restantes en el tablero.
+    \subsubsection{Heurística trivial}
 
-    \subsection{Primer heurística - Ramas angostas}
+    \[ h(n) = \# F_n \]
+
+    Dada la naturaleza del problema, se conoce exactamente el costo de la solución del problema y no es necesario aproximar este costo. Se denomina a esta la heurística \textit{trivial} debido a que una búsqueda con el algoritmo greedy que utilice esta heurística es la misma estrategia utilizada por la búsqueda DFS.
+
+    Sin embargo, con el propósito de mejorar \textit{la búsqueda}, se plantean otras heurísticas cuyo objetivo es expandir estados que se consideren con mayor potencial de encontrar una solución.
+
+    \subsubsection{Primer heurística - Ramas angostas}
         
-    Como primer heurística se propuso el mínimo entre el número de fichas en el tablero y la cantidad de formas de sacar las fichas con posibilidad de removidas 
-    en la siguiente acción. Esta segunda cantidad viene dada por la productoria, para cada tipo de ficha $i$, de la combinatoria ${ \# c_i \choose 2}$,  
-    donde $c_i$ es el conjunto de fichas de tipo $i$.
+    \[ h(n) = \min \left (\text{\# F_n}, \Pi_{i=1}^{\# K_n} {\# c_i \choose 2} \right )\]
 
-    \[ h(n) = \min \left (\text{\# F}, \Pi_{i=1}^{k} {\# c_i \choose 2} \right )\] 
+    Se propone la productoria de la cantidad de formas de sacar las fichas removibles en el estado para cada tipo de ficha. $c_i$ es el conjunto de fichas de tipo $i$.
 
-    Donde:
-    \begin{itemize}
-        \item $F$ es el conjunto de fichas en el tablero.
-        \item $k$ es la cantidad de tipos de fichas que pueden ser removidas.
-        \item $c_i$ es el conjunto de fichas de tipo $i$.
-    \end{itemize}
+    El objetivo de la heurística es explorar aquellas ramas del árbol de búsqueda donde menos decisiones se deben tomar, evitando la explosión combinatoria (de ahí el nombre "ramas angostas"). A modo de ilustración, si hay tres fichas del mismo tipo en los bordes del tablero, habrá tres posibles elecciones de parejas, y el valor de esta heurística para tal estado será mayor (no será preferido) respecto a un estado en el cual sólo hay dos fichas del mismo tipo en los bordes.
 
-    El objetivo de la heurística es explorar aquellas ramas donde menos decisiones se deben tomar. Para lograr esto, se calcula, para cada tipo de fichas, cuántas posibles 
-    elecciones hay para eliminarlas. Esto significa, si hay tres fichas en los bordes del mismo tipo, hay tres posibles elecciones de parejas, y el valor de la heurística para 
-    ese estado será mayor que para un estado en el cual sólo hay dos fichas del mismo tipo en los bordes.
-
-    Cabe destacar que por definición esta heurística es admisible, ya que nunca sobreestimará el costo de llegar a la solución desde el estado actual, el cual, para la función de 
-    costo propuesta, es igual a la cantidad de fichas que quedan en el tablero.
+    Para que la heurística sea admisible, se toma el minimo entre el valor de la heurística trivial (que siempre es admisible) y la productoria.
     
-    \subsection{Segunda heurística}
+    \subsubsection{Segunda heurística}
 
-    Como segunda heurística se propuso la sencilla resta entre la cantidad total de fichas restantes en el tablero y la cantidad de fichas con posibilidad de ser retiradas en el
-    siguiente movimiento.\\
+    \[ h(n) = \# F_n - \# R_n\] 
 
-         \[ h(n) = N - K\] 
+    Como segunda heurística se propone la resta entre la cantidad total de fichas restantes en el tablero y la cantidad de fichas con posibilidad de ser retiradas en el siguiente movimiento.
 
-    Donde:
-    
-    \begin{itemize}
-        \item $N$ es la cantidad total de fichas restantes en el tablero
-        \item $K$ es la cantidad de fichas elegibles para ser retiradas del tablero.
-    \end{itemize}
+    Por construcción esta heurística es admisible, ya que su valor es siempre menor que $\#F$, la heurística trivial.
 
-    De nuevo, por construcción esta heurística es admisible, ya que siempre es menor que el costo de llegar a la solución desde el estado actual.
-
-\section{Análisis y resultados}
+\section{Resolución y resultados}
 
 \subsection{Búsquedas no informadas}
 
     \subsubsection{Depth First Search}
     \label{sec:dfs}
-    Dada las características del problema, este es el algoritmo no informado que mejor se comporta, ya que baja rápidamente por el grafo y tiene más posibilidades de 
-    encontrar una solución primero.
-    Solución que será la aceptada porque como sabemos, todas las soluciones son igualmente buenas (Ver sección \ref{sec:problem_properties}).\\
+    Dadas las características del problema, esta es la estrategia no informado que mejor se comporta, ya que busca en profundidad y rápidamente llega a estados lejanos al estado inicial, los más cercanos a las soluciones (las cuales están todas en la misma altura, y todos los estados en esa altura son soluciones).
 
-    Un estado del tablero puede ser irresoluble si la última pareja de cada uno de dos o más tipos de fichas se encuentran intercaladas.
-    De esta manera, el tablero irresoluble de menor cantidad de fichas está formado de una sola línea de forma $ABAB$, con $A$ y $B$ dos tipos de fichas distintos.
-    Debe notarse que el hecho de que un estado sea irresoluble, no significa que no tenga estados hijos.
-    Puede tener hijos y estos también serán irresolubles.
-    Cuando esta situación se da, el \textit{DFS} expande una gran cantidad de estados que son irresolubles.
+    Un estado del tablero puede ser irresoluble si la última pareja de cada uno de dos o más tipos de fichas se encuentran intercaladas. De esta manera, el tablero irresoluble de menor cantidad de fichas está formado de una sola línea de forma $ABAB$, con $A$ y $B$ dos tipos de fichas distintos. Nótese que un estado puede ser irresoluble pero mostrar un conjunto de acciones posibles no vacío. Cuando esta situación se da, el \textit{DFS} expande una gran cantidad de estados que son irresolubles.
 
-    En el cuadro \ref{averages} podemos ver que este algoritmo presenta en promedio un buen tiempo de ejecución y una cantidad pequeña de nodos expandidos.
+    En el cuadro \ref{averages} podemos ver que esta estrategia presenta en promedio un buen tiempo de ejecución y una cantidad pequeña de nodos expandidos.
     
-    \subsubsection{Breath First Search}
-    En contraposición con el \textit{DFS}, este algoritmo tiene una perfomance pobre, ya que explora muchos estados de más, al hacer una búsqueda ``a lo ancho''.
-    También le juega en contra que para este problema no existe una solución óptima o camino óptimo, o más bien, cualquier solución es óptima, y cualquier camino es óptimo. 
-    Por lo cual no nos interesa demorarnos en analizar todos los caminos posibles.
+    \subsubsection{Breadth First Search}
+    En contraposición con el \textit{DFS}, esta estrategia tiene una perfomance pobre, ya que explora muchos estados de más, al hacer una búsqueda ``a lo ancho''. Esta estrategia no es adecuada ya que el problema no presenta una solución óptima o camino óptimo (como ya se observó anteriormente sobre la distancia a la solución), por lo cual analizar todos los caminos posibles no es necesario.
 
-    En los cuadros \ref{crappy-best} y \ref{averages} vemos que los algoritmos \textit{DFS} y \textit{Greedy} mejoran ampliamente los resultados de este algoritmo.
+    En los cuadros \ref{crappy-best} y \ref{averages} se observa que las estrategias \textit{DFS} y \textit{Greedy} son significativamente mejores que \textit{BFS}.
 
     \subsubsection{Iterative Deepening}
 
-    Como su definición lo dice, este algoritmo mezcla las características del \textit{DFS} con las del \textit{BFS}, por lo que para este problema, tiene aspectos positivos (los del 
-    \textit{DFS}) y también negativos (los del \textit{BFS}). 
-    El elemento de \textit{BFS} del algoritmo lo hace menos eficiente que el \textit{DFS}.
+    Como su definición lo dice, esta estrategia mezcla las características del \textit{DFS} con las del \textit{BFS}, por lo que para este problema, tiene aspectos positivos (los del \textit{DFS}) y también negativos (los del \textit{BFS}). Sin embargo, como consecuencia de las características que comparte con el BFS, no es una buena estrategia para resolver el problema.
 
 \subsection{Búsquedas informadas}
     
     \subsubsection{A*}
     
-    La naturaleza de las soluciones al problema hace que el \textit{A*} no sea el mejor algoritmo a aplicar. Al igual que el \textit{BFS}, intenta encontrar la solución de menor costo.
+    La naturaleza de las soluciones hace que la estrategia \textit{A*} no sea eficiente en la búsqueda, ya que al igual que \textit{BFS}, intenta encontrar la solución de menor costo.
     Pero como todas las soluciones son del mismo costo, esto a veces implica que el algoritmo vuelve sobre sus pasos para analizar un estado de menor costo.
     Y eso lo lleva a dejar para más adelante caminos más cercanos a la solución. \\
-    Cabe destacar que en el caso de la heurística trivial, este algoritmo se comporta como un \textit{DFS}.
+    Cabe destacar que en el caso de la heurística trivial, esta estrategia se comporta como un \textit{DFS}.
 
-    En los cuadros \ref{crappy-best} y \ref{averages} vemos que los algoritmos \textit{DFS} y \textit{Greedy} mejoran ampliamente los resultados de este algoritmo.
+    En los cuadros \ref{crappy-best} y \ref{averages} vemos que las estrategias \textit{DFS} y \textit{Greedy} mejoran ampliamente los resultados de \textit{A*}.
 
     \subsubsection{Greedy Search}
     
-    Este algoritmo, por definición, se centra en la heurística elegida y varía su perfomance de acuerdo a ella.
-    A diferencia del \textit{A*}, al no tener una función de costo no hace backtracking innecesario y con una buena heurística, es un algoritmo adecuado para el problema.
+    Esta estrategia, por definición, se centra en la heurística elegida y varía su perfomance de acuerdo a ella.
+    A diferencia del \textit{A*}, al no tener una función de costo no hace backtracking innecesario y con una buena heurística, es una estrategia adecuada para el problema.
 
-    El siguiente cuadro muestra una comparación entre 100 ejecuciones de este algoritmo y \textit{DFS}.
+    El siguiente cuadro muestra una comparación entre 100 ejecuciones de esta estrategia y \textit{DFS}.
     La columna \textbf{Peor} cuenta la cantidad de casos que el \textit{Greedy} con esa heurística dio un peor resultado.
     De la misma manera, \textbf{Igual} y \textbf{Mejor} muestran respectivamente cuantas veces dio el mismo resultado y un mejor resultado.
 
@@ -239,13 +211,13 @@
     planteada de forma: $h(n_{irresoluble}) = \inf$, $h(n_{no irresoluble}) = \#F$.
 
 \section{Conclusiones}
-    Dado que se conoce desde un principio la altura del grafo en el cual estarán las soluciones, interesa llegar rápidamente a esa altura.
-    Además, como se sabe que todas ellas serán igualmente "buenas", es decir no hay soluciones mejores que otras, basta con hallar solamente la primera solución.
-    Y esto lleva a que los algoritmos que no intentan minimizar el costo se adecúen mejor al problema.
+    Dado que se conoce desde un principio la altura del grafo en el cual estarán las soluciones (y el costo de transición es constante), interesa llegar rápidamente a esa altura.
+    Además, como se sabe que todas ellas serán igualmente ``buenas'', es decir no hay soluciones mejores que otras, basta con hallar solamente la primera solución.
+    Esto lleva a que las estrategias que no intentan minimizar el costo se adecúen mejor al problema.
 
-    Dentro de los algoritmos adecuados al problema, o sea \textit{DFS} y \textit{Greedy}, los resultados dependen de la heurística utilizada en el segundo.
-    El problema de ambos algoritmos se encuentra al ingresar a ramas sin solución.
-    Si la heurística usada en el \textit{Greedy} ayuda a salir de estas ramas, este debería mostrar mejores resultados.
+    Dentro de las estrategias adecuados al problema (\textit{DFS} y \textit{Greedy}), los resultados dependen de la heurística utilizada en el segundo.
+    El problema de ambos reside en su comportamiento cuando se ingresa a ramas sin solución.
+    Si la heurística usada en el \textit{Greedy} ayuda a salir de estas ramas, sus resultados mejoran al \textit{DFS}.
 
 \include{figures}
 
