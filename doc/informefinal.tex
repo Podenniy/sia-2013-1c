@@ -120,8 +120,9 @@
 
     \begin{itemize}
         \item $F_n$: conjunto de fichas en el tablero $n$
-        \item $R_n$ es la cantidad de fichas elegibles para ser retiradas del tablero $n$.
+        \item $R_n$: cantidad de fichas elegibles para ser eliminadas en el tablero $n$.
         \item $K_n$: conjunto de los distintos tipos de fichas en el tablero $n$.
+    \end{itemize}
 
     \subsubsection{Heurística trivial}
 
@@ -133,9 +134,9 @@
 
     \subsubsection{Primer heurística - Ramas angostas}
         
-    \[ h(n) = \min \left (\text{\# F_n}, \Pi_{i=1}^{\# K_n} {\# c_i \choose 2} \right )\]
+    \[ h(n) = \min \left ( \# F_n, \prod_{i=1}^{\# K_n} {\# c_i \choose 2} \right )\]
 
-    Se propone la productoria de la cantidad de formas de sacar las fichas removibles en el estado para cada tipo de ficha. $c_i$ es el conjunto de fichas de tipo $i$ en el tablero $n$.
+    Se propone la productoria de la cantidad de formas de sacar las fichas removibles en el estado para cada tipo de ficha. $c_i$ es el conjunto de fichas de tipo $i$ en los bordes del tablero $n$.
 
     El objetivo de la heurística es explorar aquellas ramas del árbol de búsqueda donde menos decisiones se deben tomar, evitando la explosión combinatoria (de ahí el nombre "ramas angostas"). A modo de ilustración, si hay tres fichas del mismo tipo en los bordes del tablero, habrá tres posibles elecciones de parejas, y el valor de esta heurística para tal estado será mayor (no será preferido) respecto a un estado en el cual sólo hay dos fichas del mismo tipo en los bordes.
 
@@ -184,7 +185,7 @@
 
     El siguiente cuadro muestra una comparación entre 100 ejecuciones de esta estrategia y \textit{DFS}. La variable que comparamos para medir la performance del algoritmo es la cantidad de nodos expandidos.
 
-    La columna \textbf{Peor} cuenta la cantidad de casos que el \textit{Greedy} con esa heurística dio un peor resultado que \textit{DFS}. De la misma manera, \textbf{Igual} y \textbf{Mejor} muestran respectivamente cuantas veces expandieron la misma cantidad de nodos y cuántas veces el \textif{Greedy} expandió menos nodos.
+    La columna \textbf{Peor} cuenta la cantidad de casos que el \textit{Greedy} con esa heurística dio un peor resultado que \textit{DFS}. De la misma manera, \textbf{Igual} y \textbf{Mejor} muestran respectivamente cuantas veces expandieron la misma cantidad de nodos y cuántas veces el \textit{Greedy} expandió menos nodos.
 
     \begin{table}[H]
         \label{greedy-dfs}
@@ -204,7 +205,7 @@
     Se puede ver en esta tabla que \textit{Greedy - No eliminables} mejora los resultados de \textit{DFS}.
     Una posible explicación para esto es que el uso de la heurística le permite evitar los estados irresolubles (vease la sección \ref{sec:dfs}).
 
-    Si el cálculo de una función que responda si un tablero es irresoluble fuera eficiente en tiempo y memoria, tal función sería una excelente heurística, conduciendo siempre por un camino que lleve a una solución en la menor cantidad de expansiones si es planteada de la forma: $h(n_{irresoluble}) = \inf$, $h(n_{no irresoluble}) = \#F_n$.
+    Si el cálculo de una función que responda si un tablero es irresoluble fuera eficiente en tiempo y memoria, tal función sería una excelente heurística, conduciendo siempre por un camino que lleve a una solución en la menor cantidad de expansiones si es planteada de la forma: $h(n_{irresoluble}) = \infty$, $h(n_{no\ irresoluble}) = \#F_n$.
 
 \section{Conclusiones}
     Dado que se conoce desde un principio la altura del árbol de búsqueda en el cual estarán los nodos que representan estados soluciones (y el costo de transición es constante), interesa que la estrategia de búsqueda llegue rápidamente a esa altura.
