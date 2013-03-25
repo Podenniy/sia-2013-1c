@@ -12,4 +12,5 @@ Donde:
 También se proveen 2 scripts de bash: generator.sh y tester.sh, que generan 100 tableros de manera aleatoria, y corren el programa sobre ellos.
 
 El archivo test2.py utiliza el tablero generado en clase y muestra la solución, junto con la regla utilizada para obtener cada estado.
+Para saber cual fue la regla aplicada mirar el valor match. Este dice que par de fichas se quito. La ficha se representa diciendo el borde del que se saco (Left o Right) y el numero de linea al que peternece.
     
