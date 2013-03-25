@@ -180,24 +180,31 @@ Los resultados de las pruebas pueden verse en la sección de Anexos.
 \subsection{Búsquedas no informadas}
 
     \subsubsection{Depth First Search}
-    Dada las características del problema, este es el algoritmo que mejor se comporta, ya que baja rápidamente por el árbol y tiene más posibilidades de encontrar una solución primero.
+    \label{sec:dfs}
+    Dada las características del problema, este es el algoritmo no informado que mejor se comporta, ya que baja rápidamente por el árbol y tiene más posibilidades de encontrar una solución primero.
     Solución que será la aceptada porque como sabemos, todas las soluciones son igualmente buenas (Ver sección \ref{implementation-details}).\\
+
+    Un estado del tablero puede ser irresoluble si la última pareja de cada uno de dos o más tipos de fichas se encuentran intercaladas.
+    De esta manera, el tablero irresoluble de menor cantidad de fichas está formado de una sola línea de forma $ABAB$, con $A$ y $B$ dos tipos de fichas distintos.
+    Debe notarse que el hecho de que un estado sea irresoluble, no significa que no tenga estados hijos.
+    Puede tener hijos y estos tambien seran irresolubles.
+    Cuando esta situación se dá, el DFS expande una gran cantidad de estados que son irresolubles.
 
     %TODO: insetar datos para backupear esto ya sea antes o despues de las aseveraciones.
     
     \subsubsection{Breath First Search}
-    En contraposición con el \textit{DFS}, este algoritmo tiene una perfomance pobre, ya que explora muchos estados de más, al hacer una búsqueda ``a lo ancho''. También le juega en 
-    contra que para este problema no existe una solución óptima o camino óptimo, o más bien, cualquier solución es óptima, y cualquier camino es óptimo. Por lo cual no nos interesa 
-    demorarnos en analizar todos los caminos posibles.
+    En contraposición con el \textit{DFS}, este algoritmo tiene una perfomance pobre, ya que explora muchos estados de más, al hacer una búsqueda ``a lo ancho''.
+    También le juega en contra que para este problema no existe una solución óptima o camino óptimo, o más bien, cualquier solución es óptima, y cualquier camino es óptimo. 
+    Por lo cual no nos interesa demorarnos en analizar todos los caminos posibles.
 
-    %TODO: insetar datos para backupear esto ya sea antes o despues de las aseveraciones.
-    
+    Se puede constatar esto en la tabla \ref{crappy-best}, donde se muestra el mejor resultado encontrado para el \textit{BFS}.
+    En esta tabla vemos que los algoritmos \textit{DFS} y \textit{Greedy} mejoran ampliamente los resultados de este algoritmo.
+
     \subsubsection{Iterative Deepening}
     Como su definición lo dice, este algoritmo mezcla las características del \textit{DFS} con las del \textit{BFS}, por lo que para este problema, tiene aspectos positivos (los del 
     \textit{DFS}) y también negativos (los del \textit{BFS}). 
+    El elemento de \textit{BFS} del algoritmo lo hace menos eficiente que el \textit{DFS}.
 
-    %TODO: insetar datos para backupear esto ya sea antes o despues de las aseveraciones.
- 
 \subsection{Búsquedas informadas}
     
     \subsubsection{A*}
@@ -207,15 +214,36 @@ Los resultados de las pruebas pueden verse en la sección de Anexos.
     Y eso lo lleva a dejar para más adelante caminos más cercanos a la solución. \\
     Cabe destacar que en el caso de la heurística trivial, este algoritmo se comporta como un \textit{DFS}.
 
-    %TODO: insetar datos para backupear esto ya sea antes o despues de las aseveraciones.
-    %TODO: insetar datos que muestren la conclusion de que A* con la la funcion de costo  y la heurística trivial se comporta como DFS.
+    En el cuadro \ref{crappy-best} se ve el mejor resultado encontrado para este algoritmo.
+    En esta tabla vemos que los algoritmos \textit{DFS} y \textit{Greedy} mejoran ampliamente los resultados de este algoritmo.
 
     \subsubsection{Greedy Search}
     
     Este algoritmo, por definición, se centra en la heurística elegida y varía su perfomance de acuerdo a ella.
     A diferencia del \textit{A*}, al no tener una funcion de costo no hace backtracking innecesario y con una buena heurística, es un algoritmo adecuado para el problema.
 
-    %TODO: insetar datos para backupear esto ya sea antes o despues de las aseveraciones.
+    El siguiente cuadro muestra una comparacion entre 100 ejecuciones de este algoritmo y \textit{DFS}.
+    La columna \textbf{Peor} cuenta la cantidad de casos que el \textit{Greedy} con esa heuristica dio un peor resultado.
+    De la misma manera, \textbf{Igual} y \textbf{Mejor} muestran respectivamente cuantas veces dio el mismo resultado y un mejor resultado.
+
+    \begin{table}[H]
+        \label{greedy-dfs}
+
+        \begin{center}
+        \begin{tabular}{l|r|r|r}
+            Heuristica & Peor & Igual & Mejor \\
+            \hline
+            Slim & 49 & 36 & 15 \\
+            Fat & 0 & 70 & 30 \\
+        \end{tabular}
+        \end{center}
+        \caption{Comparacion entre \textit{Greedy} y \textit{DFS}}
+
+    \end{table}
+
+    Podemos ver que \textit{Greedy Fat} mejora los resultados del \textit{DFS}.
+    Creemos que esto es debido a que el uso de la heuristica le permite evitar los estados irresolubles (Vease la seccion \ref{sec:dfs}).
+    Si el cálculo de una función que responda si un tablero es irresoluble fuera eficiente en tiempo y memoria, tal función sería potencialmente una mejor heurística planteada de forma: $h(n_{irresoluble}) = \inf$, $h(n_{no irresoluble}) = \#F$.
 
 \section{Conclusiones}
     Dado que se conoce desde un principio la altura del árbol en el cual estarán las soluciones, interesa llegar rápidamente a esa altura. Además, como se sabe que todas ellas serán 
@@ -233,5 +261,7 @@ Los resultados de las pruebas pueden verse en la sección de Anexos.
     opciones para este problema en particular. \\
 
     Esto puede observarse en [INSERT RELEVANT DATA HERE].\\
+
+\include{figures}
 
 \end{document}
