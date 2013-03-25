@@ -88,25 +88,17 @@
 % \tableofcontents
 % \newpage
 
-\section{Descripción del problema}
+\section{Definición del problema}
 
-    \subsection{Definición}
+    El problema se definió de la siguiente manera:
 
-    % TODO: REfactorear esta sección
-    % TODO: Cambie algunas cosas pero creo que necesita otro mindset si se quiere refactorear más
-
-    Se define el tablero de juego como una matriz de números enteros, donde cada número representa un tipo de ficha. Números distintos corresponden a tipos de fichas distintas. 
-    El objetivo del juego es vaciar el tablero, quitando todas las fichas. Las fichas se sacan de a pares, siempre siendo ambas del mismo tipo, y solamente pueden ser elegibles 
-    para ser sacadas del tablero si se encuentran en los bordes izquierdo o derecho del tablero. No hay necesidad de que ambas fichas esten en el mismo borde. Cabe destacar 
-    que podría ocurrir que en un determinado momento no haya posibilidad de quitar más fichas. En este caso, el juego se da por perdido.
-
-    \subsection{Modelado}
-    \label{problem-info}
-    Se representó el proceso del juego como una sucesión de estados que están dispuestos en un grafo dirigido sin ciclos. Los estados están conectados si se puede pasar de uno 
-    al otro, haciendo un movimiento del juego \textit{válido}. Teniendo esto en cuenta, el primer nodo de nuestro grafo es el estado inicial, en el que tablero tiene todas sus fichas. 
-    Algo que se deduce de este planteo, es que todos los estados que estén a la misma altura $h$, tendrán la misma cantidad de fichas, por que para llegar a él hubo que aplicar 
-    la misma cantidad de reglas, $h$. Esto nos lleva a poder afirmar que todas las soluciones estarán a la misma altura (la máxima) y que esta altura es conocida para un 
-    tablero de $N$ fichas: es $\frac{N}{2}$, ya que en cada movimiento válido se pueden sacar sólo 2 fichas.
+    \begin{itemize}
+        \item El estado inicial: el tablero con todas las fichas.
+        \item Conjunto de acciones posibles: sacar un par de fichas del mismo tipo, que se encuentren en los bordes izquierdo o derecho del tablero. Este par no es un par ordenado.
+        \item Modelo de transición: al sacar un par de fichas, se llega a otro estado, con las mismas fichas en las mismas posiciones, excepto por el par de fichas removidas.
+        \item Condición de solución: el tablero vacío, con todas las fichas removidas.
+        \item Funció costo de ruta: la cantidad de fichas removidas.
+    \end{itemize}
 
 \section{Análisis}
 
