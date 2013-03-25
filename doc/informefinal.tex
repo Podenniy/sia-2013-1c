@@ -108,16 +108,13 @@
     la misma cantidad de reglas, $h$. Esto nos lleva a poder afirmar que todas las soluciones estarán a la misma altura (la máxima) y que esta altura es conocida para un 
     tablero de $N$ fichas: es $\frac{N}{2}$, ya que en cada movimiento válido se pueden sacar sólo 2 fichas.
 
-\section{Implementación}
+\section{Análisis}
 
-    % TODO: Detallar que siempre nos quedamos con la primer solución y que hacemos eliminacion de repetidos
-    % TODO: Chequear mi explanation (Alvanator)
-    \label{implementation-details}
-    Dadas las características del problema, existen algunos detalles que son intrínsecos a el, y que fueron aprovechados en la actual implementación. El primero, es el hecho
-    de que, de existir varias soluciones, todas serán igualmente buenas. Es decir, no existe una solución mejor que otra, ya que como bien se explicó en la sección \ref{problem-info}, 
-    todas se encontrarán a igual profundidad del árbol, lo que significa que para llegar a cualquiera de ellas se requieren la misma cantidad de movimientos. El segundo detalle, 
-    consiste en la eliminación de estados repetidos. Esto es, si en algun momento el algoritmo explora un estado que es \textit{idéntico} a alguno que ya ha explorado, simplemente
-    lo descarta, y continuá explorando otras posibilidades, reduciendo el tiempo de ejecución. Esto es factible dadas las simetrías propias del problema.\\
+    Debido a la naturaleza del problema, dado el estado inicial se conoce el costo de ruta de la solución (si existe): será igual a la cantidad de fichas en el tablero.
+
+    Otra característica que presenta el problema es que las soluciones son indistintas unas de otras, ya que todas tendrán el mismo costo de ruta. Esto lleva a que no haya una solución más eficiente que otra.
+
+    El grafo de búsqueda es acíclico y dirigido. Dado un estado con dos acciones posibles, tomar una de ellas conduce a otro estado que siempre contará con la acción que no se tomó en su conjunto de acciones posibles. Como corolario de esto, siempre que un estado tenga más de una acción posible (lo cual es muy frecuente, o alcanzar la solución se convierte en un problema trivial), se tendrá más de un camino posible para llegar a una solución, por lo que evitar considerar estados más de una vez es indispensable.
 
     \subsection{Función de costo}
 
