@@ -118,10 +118,11 @@ def count_kinds(board, kind):
 
 class State(object):
 
-    def __init__(self, board, depth, parent):
+    def __init__(self, board, depth, parent, match = None):
         self.board = board
         self.depth = depth
         self.parent = parent
+        self.match = match
         self.h = 0
         global number_of_states
         self.creation_number = number_of_states
@@ -135,12 +136,21 @@ class State(object):
         number_of_explosions += 1
 
         matches = self.board.get_matches()
-        return [State(self.board.mutate_board(match), self.depth + 1, self)
+        return [State(self.board.mutate_board(match), self.depth + 1, self, match)
                 for match in matches]
 
     def __repr__(self):
-        return "State %d: (h = %d, depth = %d, board = '%s')" % (
-                self.creation_number, self.h, self.depth, repr(self.board))
+        if not self.match:
+            return "State %d: (h = %d, depth = %d, board = '%s', initial)" % (
+                self.creation_number, self.h, self.depth, repr(self.board),
+            )
+        line1, line2 = map(str, map(lambda x: x + 1, get_lines(self.match)))
+        pos1, pos2 = get_positions(self.match)
+        return "State %d: (h = %d, depth = %d, board = '%s', match = (%s, %s))" % (
+                self.creation_number, self.h, self.depth, repr(self.board),
+                'Left' + line1 if not pos1 else 'Right' + line1,
+                'Left' + line2 if not pos2 else 'Right' + line2,
+        )
 
     def __hash__(self):
         return self.board.__hash__()

@@ -118,5 +118,12 @@ def solve_with_strategy(board, strategy):
                 seen[board.depth].add(board)
                 strategy.add_boards([board])
 
-    return strategy.get_result()
+    result = strategy.get_result()
+    path = collections.deque()
+    it = result
+    while it:
+        path.appendleft(it)
+        it = it.parent
+    logger.debug('\n'.join(map(str, path)))
+    return result
 

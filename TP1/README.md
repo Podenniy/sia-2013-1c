@@ -10,4 +10,6 @@ Donde:
     heuristic es un argumento opcional y es el nombre de la heurística a utilizar. Las posibilidades son slim, fat o trivial.
 
 También se proveen 2 scripts de bash: generator.sh y tester.sh, que generan 100 tableros de manera aleatoria, y corren el programa sobre ellos.
+
+El archivo test2.py utiliza el tablero generado en clase y muestra la solución, junto con la regla utilizada para obtener cada estado.
     
