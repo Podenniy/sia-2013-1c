@@ -238,21 +238,13 @@
     Si el cálculo de una función que responda si un tablero es irresoluble fuera eficiente en tiempo y memoria, tal función sería potencialmente una mejor heurística planteada de forma: $h(n_{irresoluble}) = \inf$, $h(n_{no irresoluble}) = \#F$.
 
 \section{Conclusiones}
-    Dado que se conoce desde un principio la altura del árbol en el cual estarán las soluciones, interesa llegar rápidamente a esa altura. Además, como se sabe que todas ellas serán 
-    igualmente "buenas", es decir no hay soluciones mejores que otras, basta con hallar solamente la primera solución. Por lo tanto, se deduce fácilmente que un algoritmo 
-    \textit{DFS} tendrá siempre una perfomance mejor que el resto. \\
+    Dado que se conoce desde un principio la altura del árbol en el cual estarán las soluciones, interesa llegar rápidamente a esa altura.
+    Además, como se sabe que todas ellas serán igualmente "buenas", es decir no hay soluciones mejores que otras, basta con hallar solamente la primera solución.
+    Y esto lleva a que los algoritmos que no intentan minimizar el costo se adecuen mejor al problema.
 
-    Los resultados de la tabla [INSERT RELEVANT DATA HERE] demuestran esta aseveración. \\
-
-    Es interesante ver que un algoritmo de tipo A* con la función de costo trivial y la heurística trivial, se transforma en un \textit{DFS}, al explorar siempre 
-    primero en profundidad. \\
-
-    Los resultados de [INSERT RELEVANT DATA HERE] demuestran esta aseveración. \\
-
-    Otro dato que resulta interesante es que algoritmos reconocidos por brindar caminos óptimos o soluciones óptimas, como \textit{BFS} o \textit{A*}, se encuentran entre las peores
-    opciones para este problema en particular. \\
-
-    Esto puede observarse en [INSERT RELEVANT DATA HERE].\\
+    Dentro de los algoritmos adecuados al problema, o sea \textit{DFS} y \textit{Greedy}, los resultados dependen de la heuristica utilizada.
+    El problema de ambos algoritmos se encuentra al ingresar a ramas sin solucion.
+    Si la heuristica usada en el \textit{Greedy} ayuda a salir de estas ramas, este deberia mostrar mejores resultados.
 
 \include{figures}
 
