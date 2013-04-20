@@ -1,7 +1,5 @@
-function W=learn(dataset, expected, levels_sizes, eta)
+function W=non_random_learn(dataset, expected, W, eta)
 
-  W = struct();
-  W = get_random_w(levels_sizes, 0.1);
   levels_ = size(W);
   levels = levels_(1);
   flag = 0;
