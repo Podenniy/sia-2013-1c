@@ -14,7 +14,7 @@ function W = backpropagation_learning(W, V, H, S, eta)
     next = lvl(level+1);
 
     next_w = W.(next);
-    delta.(name) = [gp(H.(name)) 1] .* (next_w * delta.(next)');
+    delta.(name) = [gp(H.(name)) ; 1] .* (next_w' * delta.(next));
   end
 
 
@@ -35,13 +35,9 @@ function W = backpropagation_learning(W, V, H, S, eta)
 
      [num_rows, num_cols] = size(w);
 
-     w;
-
      for i = 1:num_rows
        for j = 1:num_cols
-         i;
-         j;
-         w(i,j) = w(i,j) + eta * level_delta(i) * level_inputs(j);
+         w(i,j) = w(i,j) - eta * level_delta(i) * level_inputs(j);
        end
      end
 

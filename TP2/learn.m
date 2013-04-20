@@ -1,7 +1,7 @@
 function W=learn(dataset, expected, levels_sizes, eta)
 
   W = struct();
-  W = get_random_w(levels_sizes, 0.1);
+  W = get_random_w(levels_sizes, 0.3);
   levels_ = size(W);
   levels = levels_(1);
   flag = 0;
@@ -22,7 +22,7 @@ function W=learn(dataset, expected, levels_sizes, eta)
       W = backpropagation_learning(W, V, H, S, eta);
       % display(W);
       % display(V);
-      P = [P; V.(lvl(levels+1))-S];
+      P = [P sum(abs(V.(lvl(levels+1))-S))];
 
       if abs(V.(lvl(levels+1))-S) < 0.0001
         flag = 1;
