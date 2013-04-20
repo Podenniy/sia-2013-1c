@@ -5,7 +5,7 @@ function W = get_random_w(levels, abs_cap)
   cap = @(R)(R-0.5).*abs_cap.*2;
 
   W = struct();
-  for level=1:cols(levels)-1
+  for level=1:size(levels,2)-1
     W.(lvl(level)) = cap(rand(levels(level+1), levels(level)+1));
   end
 end

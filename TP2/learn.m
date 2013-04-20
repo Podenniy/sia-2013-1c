@@ -11,7 +11,6 @@ function W=learn(dataset, expected, W, eta, g, gp, cap)
   P = [];
   while flag == 0
     flag = 1;
-    iter = iter + 1;
 
     idxs = randperm(size(dataset, 2));
     dataset = dataset(:,idxs);
@@ -37,7 +36,7 @@ function W=learn(dataset, expected, W, eta, g, gp, cap)
     if mod(iter, NO_VARIATION_ITERATIONS) == 0
       current = [];
       for i=1:size(dataset, 2)
-        networkresult = run_neural_network(W, E);
+        networkresult = run_neural_network(W, E, g);
         current = [current networkresult.V.(lvl(levels+1))];
       end
       if ~all(last == 0) && (norm(current - last) < NO_VARIATION_DIFF)

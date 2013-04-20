@@ -6,14 +6,14 @@ function W = backpropagation_learning(W, V, H, S, eta, gp)
   delta = struct();
 
   % First step of the backpropagation
-  delta.(last_level) = gp(H.(last_level)) .* (S-V.(lvl(levels + 1)));
+  delta.(last_level) = [gp(H.(last_level)) .* (S-V.(lvl(levels + 1))) ; 0];
 
   for level = levels-1:-1:1
     name = lvl(level);
     next = lvl(level+1);
 
     next_w = W.(next);
-    delta.(name) = [gp(H.(name)) ; 1] .* (next_w' * delta.(next));
+    delta.(name) = [gp(H.(name)) ; 1] .* (next_w' * delta.(next)(1:end-1));
   end
 
 
