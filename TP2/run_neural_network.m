@@ -1,4 +1,4 @@
-function rest = run_neural_network(W, E)
+function rest = run_neural_network(W, E, g)
   O = E;
   V = struct();
   H = struct();
