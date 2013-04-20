@@ -1,6 +1,6 @@
 function W = backpropagation_learning(W, V, H, S, eta)
 
-  levels = size(W);
+  levels = size(fieldnames(W));
   levels = levels(1);
   last_level = lvl(levels);
 
