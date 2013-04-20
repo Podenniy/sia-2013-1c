@@ -1,18 +1,14 @@
-function W=learn(dataset, expected, levels_sizes, eta)
+function W=learn(dataset, expected, W, eta)
 
-  W = struct();
-  W = get_random_w(levels_sizes, 0.3);
-  levels_ = size(W);
-  levels = levels_(1);
+  levels = size(fieldnames(W), 1);
   flag = 0;
-
-  old_w = W.(lvl(levels));
+  iter = 1;
 
   P = [];
-  % while flag == 0
-  for k=1:500
-
-    for i=1:size(dataset)
+  while flag == 0
+    flag = 1;
+    iter = iter + 1;
+    for i=1:size(dataset, 2)
 
       E = dataset(:,i);
       S = expected(i);
@@ -20,22 +16,19 @@ function W=learn(dataset, expected, levels_sizes, eta)
       V = networkresult.V;
       H = networkresult.H;
       W = backpropagation_learning(W, V, H, S, eta);
-      % display(W);
-      % display(V);
-      P = [P sum(abs(V.(lvl(levels+1))-S))];
 
-      if abs(V.(lvl(levels+1))-S) < 0.0001
-        flag = 1;
+      P = [P sum(V.(lvl(levels+1))-S)];
+
+      if abs(V.(lvl(levels+1))-S) > 0.1
+        flag = 0;
       end
 
-      % disp(abs(V.(lvl(levels+1))-S));
-      % disp(sum(abs(W.(lvl(levels)) - old_w)));
-      old_w = W.(lvl(levels));
-
     end
-
-  %endwhile
+    
+    % this can be compared directly with "expected"
+    y = get_xor_results(W);
   end
   plot(P);
+  display(['Took me ' num2str(iter) ' iterations to reduce error to <0.1'])
 
 end

@@ -5,7 +5,7 @@ function rest = run_neural_network(W, E)
 
   V.(lvl(1)) = O;
 
-  levels = size(fieldnames(W)); levels = levels(1);
+  levels = size(fieldnames(W), 1);
   for level=1:levels           % For each layer of the network
       name = lvl(level);
       w = W.(name);            % using the weight matrix

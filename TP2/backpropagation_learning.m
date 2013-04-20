@@ -1,7 +1,6 @@
 function W = backpropagation_learning(W, V, H, S, eta)
 
-  levels = size(fieldnames(W));
-  levels = levels(1);
+  levels = size(fieldnames(W), 1);
   last_level = lvl(levels);
 
   delta = struct();
@@ -22,26 +21,17 @@ function W = backpropagation_learning(W, V, H, S, eta)
   for level = levels:-1:1
 
     name = lvl(level);
-     level_delta = delta.(name);
-     level_inputs = [V.(name) ; -1];
+    level_delta = delta.(name);
+    level_inputs = [V.(name) ; -1];
+    w = W.(name);
 
-    %delta
-    %V.(name)
-    %weights = delta.(name)' * [V.(name); -1]'
-    %W.(name) = W.(name) + eta .* weights(1:rows(weights)-1,:);
+    [num_rows, num_cols] = size(w);
+    for i = 1:num_rows
+      for j = 1:num_cols
+        w(i,j) = w(i,j) + eta * level_delta(i) * level_inputs(j);
+      end
+    end
 
-
-     w = W.(name);
-
-     [num_rows, num_cols] = size(w);
-
-     for i = 1:num_rows
-       for j = 1:num_cols
-         w(i,j) = w(i,j) - eta * level_delta(i) * level_inputs(j);
-       end
-     end
-
-     W.(name) = w;
-
+    W.(name) = w;
   end
 end
