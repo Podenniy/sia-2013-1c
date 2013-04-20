@@ -1,4 +1,4 @@
-function W=learn(dataset, expected, W, eta, g, gp, cap)
+function W=learn(dataset, expected, W, eta, g, gp, cap, alpha)
 
   NO_VARIATION_ITERATIONS = 3500;
   NO_VARIATION_DIFF = 0.01;
@@ -8,14 +8,22 @@ function W=learn(dataset, expected, W, eta, g, gp, cap)
   iter = 0;
   last = [];
 
-  P = [];
+  mean_error = [];
+  deviation = [];
+  error = zeros(size(dataset, 2), 1);
   while flag == 0
     flag = 1;
 
     idxs = randperm(size(dataset, 2));
     dataset = dataset(:,idxs);
     expected = expected(idxs);
-
+    
+    previous_changes = {};
+    for i = 1 : levels
+      name = lvl(i);
+      previous_changes.(name) = zeros(size(W.(name)));
+    end
+    
     for i=1:size(dataset, 2)
 
       E = dataset(:,i);
@@ -23,15 +31,22 @@ function W=learn(dataset, expected, W, eta, g, gp, cap)
       networkresult = run_neural_network(W, E, g);
       V = networkresult.V;
       H = networkresult.H;
-      W = backpropagation_learning(W, V, H, S, eta, gp);
+      res = backpropagation_learning(W, V, H, S, eta, gp, alpha, previous_changes);
+      
+      W = res.W;
+      previous_changes = res.changes;
 
-      P = [P norm(V.(lvl(levels+1))-S)];
+      err = norm(V.(lvl(levels+1))-S);
 
-      if norm(V.(lvl(levels+1))-S) > 0.1
+      if err > 0.1
         flag = 0;
       end
 
+      error(i) = err;
     end
+    
+    mean_error = [mean_error mean(error)];
+    deviation = [deviation std(error)];
 
     if mod(iter, NO_VARIATION_ITERATIONS) == 0
       current = [];
@@ -51,8 +66,14 @@ function W=learn(dataset, expected, W, eta, g, gp, cap)
     end
 
     iter = iter + 1;
+    if mod(iter, 1) == 0
+      x = 1 : size(mean_error, 2);
+      plot(x, mean_error, 'r.-', x, deviation, 'b.-');
+      display(['Going at ' num2str(iter) ' ' ]);
+      drawnow
+    end
+      
   end
-  plot(P);
   display(['Took me ' num2str(iter) ' iterations to reduce error to <0.1'])
 
 end

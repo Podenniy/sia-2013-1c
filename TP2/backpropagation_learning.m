@@ -1,4 +1,4 @@
-function W = backpropagation_learning(W, V, H, S, eta, gp)
+function out = backpropagation_learning(W, V, H, S, eta, gp, alpha, previous_changes)
 
   levels = size(fieldnames(W), 1);
   last_level = lvl(levels);
@@ -17,6 +17,7 @@ function W = backpropagation_learning(W, V, H, S, eta, gp)
   end
 
 
+  changes = {};
 
   for level = levels:-1:1
 
@@ -26,12 +27,19 @@ function W = backpropagation_learning(W, V, H, S, eta, gp)
     w = W.(name);
 
     [num_rows, num_cols] = size(w);
+    change_in_level = zeros(num_rows, num_cols);
     for i = 1:num_rows
       for j = 1:num_cols
-        w(i,j) = w(i,j) + eta * level_delta(i) * level_inputs(j);
+        change_in_level(i, j) = eta * level_delta(i) * level_inputs(j);
       end
     end
 
-    W.(name) = w;
+    change_in_level = change_in_level + alpha .* previous_changes.(name);
+    W.(name) = w + change_in_level;
+    changes.(name) = change_in_level;
   end
+  
+  out = {};
+  out.W = W;
+  out.changes = changes;
 end
