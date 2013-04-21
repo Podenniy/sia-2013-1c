@@ -84,6 +84,15 @@ function W=learn(dataset, expected, W, eta, g, gp, cap, alpha, error_cap)
     else
       mean_errors = [mean_errors mean_error];
       deviation = [deviation std(error)];
+    
+    if mod(iter, 10) == 0
+      item = idivide(int32(iter+10), int32(10));
+      figure(2);
+      hist(current-expected);
+      drawnow();
+      Q(item) = norm(current-expected);
+      figure(3);
+      plot(Q(1:item));
     end
     rollback = 0;
 
@@ -108,16 +117,6 @@ function W=learn(dataset, expected, W, eta, g, gp, cap, alpha, error_cap)
       etas = [etas eta];
       plot(etas);
       display(['Going at ' num2str(iter) ' ' num2str(mean_errors(end))]);
-      drawnow
-    end
-
-    if mod(iter, 10) == 0
-      item = idivide(int32(iter+10), int32(10));
-      figure(3);
-      hist(current-expected);
-      Q(item) = norm(current-expected);
-      figure(4);
-      plot(Q(1:item));
       drawnow
     end
   end
