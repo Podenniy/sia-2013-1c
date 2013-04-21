@@ -36,6 +36,8 @@ function plotNeural(W, filename)
     name = lvl(level);
     w = W.(name);
     
+        max_value = max(max(abs(w)));
+    
     for j=1:size(w, 1)
       for i=1:size(w, 2)-1
         edges = [edges; limits(level)+i, limits(level+1)+j, w(j,i)];
@@ -45,7 +47,7 @@ function plotNeural(W, filename)
         else
           color = ['0.65,1,0.5'];
         end
-        fprintf(f, [' ' level_names(level) '_' num2str(i) ' -> ' level_names(level+1) '_' num2str(j) ' [color="' color '", penwidth=' num2str(abs(w(j,i))) '];']);
+        fprintf(f, [' ' level_names(level) '_' num2str(i) ' -> ' level_names(level+1) '_' num2str(j) ' [color="' color '", penwidth=' num2str(5*abs(w(j,i))/max_value) '];']);
       end
     end
   end
