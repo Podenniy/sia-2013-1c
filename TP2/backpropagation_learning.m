@@ -16,7 +16,6 @@ function out = backpropagation_learning(W, V, H, S, eta, gp, alpha, previous_cha
     delta.(name) = [gp(H.(name)) ; 1] .* (next_w' * delta.(next)(1:end-1));
   end
 
-
   changes = {};
 
   for level = levels:-1:1
