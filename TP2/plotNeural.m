@@ -1,15 +1,16 @@
-function nodes = plotNeural(W)
+function plotNeural(W, filename)
 
   nodes = [];
-  display('digraph{');
+  f = fopen(filename, 'w');
+  fprintf(f, 'digraph{');
   
-  display(' splines = false;');
+  fprintf(f, ' splines = false;');
   
   w = W.(lvl(1));
   level_names = ['Z'];
   for j=1:size(w, 2)-1
     nodes = [nodes; j, 0, 0];
-    display([' Z_' num2str(j) ' [label="' num2str(j) '"];']);
+    fprintf(f, [' Z_' num2str(j) ' [label="' num2str(j) '"];']);
   end
   
   limits = [0, size(nodes, 1)];
@@ -24,7 +25,7 @@ function nodes = plotNeural(W)
     
     for j=1:size(w, 1)
       nodes = [nodes; j, level, w(j, end)];
-      display([' ' name '_' num2str(j) ' [label="' num2str(j) '(' num2str(w(j, end)) ')"];']);
+      fprintf(f, [' ' name '_' num2str(j) ' [label="' num2str(j) '(' num2str(w(j, end)) ')"];']);
     end
     
     limits = [limits, limits(end) + size(w, 1)];
@@ -44,11 +45,10 @@ function nodes = plotNeural(W)
         else
           color = ['0.65,1,0.5'];
         end
-        display([' ' level_names(level) '_' num2str(i) ' -> ' level_names(level+1) '_' num2str(j) ' [color="' color '", penwidth=' num2str(abs(w(j,i))) '];']);
+        fprintf(f, [' ' level_names(level) '_' num2str(i) ' -> ' level_names(level+1) '_' num2str(j) ' [color="' color '", penwidth=' num2str(abs(w(j,i))) '];']);
       end
     end
   end
-  display('}');
-  % grPlot(nodes, edges);
+  fprintf(f, '}');
 
 end
