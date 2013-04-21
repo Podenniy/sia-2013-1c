@@ -40,11 +40,11 @@ function nodes = plotNeural(W)
         edges = [edges; limits(level)+i, limits(level+1)+j, w(j,i)];
         
         if w(j,i) > 0
-          color = ['0,1,' num2str((w(j,i) / top_value))];
+          color = ['0,1,' num2str(0.5 + (w(j,i) / top_value)/2)];
         else
-          color = ['0.7,1,' num2str((w(j,i) / top_value))];
+          color = ['0.65,1,0.5'];
         end
-        display([' ' level_names(level) '_' num2str(i) ' -> ' level_names(level+1) '_' num2str(j) ' [color="' color '", penwidth=' num2str(w(j,i)) '];']);
+        display([' ' level_names(level) '_' num2str(i) ' -> ' level_names(level+1) '_' num2str(j) ' [color="' color '", penwidth=' num2str(abs(w(j,i))) '];']);
       end
     end
   end
