@@ -1,7 +1,4 @@
-function W=learn(dataset, expected, W, eta, g, gp, cap, alpha, error_cap)
-
-  NO_VARIATION_ITERATIONS = 3500;
-  NO_VARIATION_DIFF = 0.01;
+function W=learn(dataset, expected, W, eta, g, gp, alpha, error_cap)
 
   adaptive_steps = 4;
   adaptive_increment = 0.05;
@@ -9,22 +6,19 @@ function W=learn(dataset, expected, W, eta, g, gp, cap, alpha, error_cap)
   adaptive_epsilon = 0.00001;
 
   levels = size(fieldnames(W), 1);
-  flag = 0;
-  iter = 0;
-  last = [];
+  iter = 1;
+  tries = 0;
 
-  mean_errors = [];
-  deviation = [];
   error = zeros(size(dataset, 2), 1);
-  Q = zeros(10000);
+  mean_errors = zeros(10000,1);
 
   original_alpha = alpha;
   good_steps = 0;
   rollback = 0;
-  etas = [];
 
-  while flag == 0
+  while true
 
+    tries = tries + 1;
     idxs = randperm(size(dataset, 2));
     dataset = dataset(:,idxs);
     expected = expected(idxs);
@@ -34,8 +28,6 @@ function W=learn(dataset, expected, W, eta, g, gp, cap, alpha, error_cap)
       name = lvl(i);
       previous_changes.(name) = zeros(size(W.(name)));
     end
-    current = zeros(size(expected));
-
     last_weights = W;
     for i=1:size(dataset, 2)
 
@@ -50,16 +42,17 @@ function W=learn(dataset, expected, W, eta, g, gp, cap, alpha, error_cap)
       previous_changes = res.changes;
 
       result = V.(lvl(levels+1));
-      current(:,i) = result;
       error(i) = norm(result - S);
     end
-
     mean_error = mean(error);
 
     if mean_error < error_cap
-      flag = 1;
-    elseif size(mean_errors, 2) > 0
-      if mean_error + adaptive_epsilon < mean_errors(end)
+      break;
+    end
+    
+    if iter > 2
+      last_mean_error = mean_errors(iter-1);
+      if mean_error + adaptive_epsilon < last_mean_error
         good_steps = good_steps + 1;
         alpha = original_alpha;
 
@@ -67,7 +60,7 @@ function W=learn(dataset, expected, W, eta, g, gp, cap, alpha, error_cap)
           good_steps = 0;
           eta = eta + adaptive_increment;
         end
-      elseif mean_error - adaptive_epsilon > mean_errors(end)
+      elseif mean_error - adaptive_epsilon > last_mean_error
         good_steps = 0;
         eta = eta * (1 - adaptive_decrement);
         alpha = 0;
@@ -78,47 +71,21 @@ function W=learn(dataset, expected, W, eta, g, gp, cap, alpha, error_cap)
       end
     end
 
-
     if rollback
       W = last_weights;
+      iter = iter - 1;
     else
-      mean_errors = [mean_errors mean_error];
-      deviation = [deviation std(error)];
-    
-    if mod(iter, 10) == 0
-      item = idivide(int32(iter+10), int32(10));
-      figure(2);
-      hist(current-expected);
-      drawnow();
-      Q(item) = norm(current-expected);
-      figure(3);
-      plot(Q(1:item));
+      mean_errors(iter) = mean_error;
     end
+    
     rollback = 0;
-
-    if flag == 0 && mod(iter, NO_VARIATION_ITERATIONS) == 0
-      if ~all(last == 0) && (norm(current - last) < NO_VARIATION_DIFF)
-        display('Things didnt change in a while, randomizing');
-        matrix_dims = [size(W.(lvl(1)), 2)-1];
-        for i=1:levels
-          matrix_dims = [matrix_dims size(W.(lvl(i)), 1)];
-        end
-        W = get_random_w(matrix_dims, cap);
-      end
-      last = current;
+    
+    if mod(iter, 8) == 0
+      plot(mean_errors(1:iter));
+      drawnow();
     end
 
     iter = iter + 1;
-    if mod(iter, 2) == 0
-      figure(1);
-      x = 1 : size(mean_errors, 2);
-      plot(x, mean_errors, 'r.-', x, deviation, 'b.-');
-      figure(2);
-      etas = [etas eta];
-      plot(etas);
-      display(['Going at ' num2str(iter) ' ' num2str(mean_errors(end))]);
-      drawnow
-    end
   end
   display(['Took me ' num2str(iter) ' iterations to reduce error to < ' num2str(error_cap)])
 
