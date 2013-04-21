@@ -1,4 +1,4 @@
-function W=learn(dataset, expected, W, eta, g, gp, alpha, error_cap)
+function W=learn(dataset, expected, W, eta, g, gp, alpha, error_cap, noise_factor)
 
   adaptive_steps = 4;
   adaptive_increment = 0.05;
@@ -15,6 +15,7 @@ function W=learn(dataset, expected, W, eta, g, gp, alpha, error_cap)
   original_alpha = alpha;
   good_steps = 0;
   rollback = 0;
+  last_trial_update = 0;
 
   while true
 
@@ -33,6 +34,8 @@ function W=learn(dataset, expected, W, eta, g, gp, alpha, error_cap)
 
       E = dataset(:,i);
       S = expected(i);
+      
+      add_noise(W, ((tries - last_trial_update)^2) * noise_factor);
       networkresult = run_neural_network(W, E, g);
       V = networkresult.V;
       H = networkresult.H;
@@ -76,16 +79,16 @@ function W=learn(dataset, expected, W, eta, g, gp, alpha, error_cap)
       iter = iter - 1;
     else
       mean_errors(iter) = mean_error;
+      last_trial_update = tries;
+      plot(mean_errors(1:iter));
+      plotNeural(W, ['plot' num2str(iter) '.png']);
+      drawnow();
     end
     
     rollback = 0;
-    
-    if mod(iter, 8) == 0
-      plot(mean_errors(1:iter));
-      drawnow();
-    end
-
     iter = iter + 1;
+    
+    display(['iter=' num2str(iter) ', trials=' num2str(tries) ', error=' num2str(mean_error) ', noise_factor=' num2str(((tries - last_trial_update)^2) * noise_factor)]);
   end
   display(['Took me ' num2str(iter) ' iterations to reduce error to < ' num2str(error_cap)])
 
