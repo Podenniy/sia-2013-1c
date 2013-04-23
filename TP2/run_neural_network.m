@@ -6,13 +6,13 @@ function rest = run_neural_network(W, E, g)
 
   V.(lvl(1)) = O;
 
-  levels = size(lvl, 1);
+  levels = size(lvl, 1)-1;
   for level=1:levels           % For each layer of the network
       name = lvl(level);
       w = W.(name);            % using the weight matrix
       h = w * [O; -1];         % Add the fake -1 neuron at the end
       O = g(h);                % get the output vector
-      V.(lvl(level + 1)) = O;
+      V.(char('@' + level + 1)) = O;
       H.(name) = h;
   end
   rest = struct();

@@ -32,7 +32,7 @@ function data=learn(dataset, expected, W, g, gp, parameters)
   
   adaptative_epsilon = 0.00001;
 
-  levels = size(lvl, 1);
+  levels = size(lvl, 1)-1;
   iter = 1;
   tries = 0;
 

@@ -1,7 +1,7 @@
 function out = backpropagation_learning(W, V, H, S, eta, gp, alpha, previous_changes)
 
   lvl = get_lvls(W);
-  levels = size(lvl, 1);
+  levels = size(lvl, 1)-1;
   last_level = lvl(levels);
 
   delta = struct();

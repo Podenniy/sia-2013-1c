@@ -6,17 +6,17 @@
 %   dataset_2 = [dataset_2, x(i:i+1)'];
 % end
 % expected_2 = x(3:802);
-%
+% 
 % cap = 0.6;
 % learn(dataset_2, expected_2, get_random_w([2 5 4 1], cap), 0.2, @tanh, @(x)(sech(x).^2), cap, 0.3)
 
 load('TimeSerie_G1.mat');
 test_set = [];
 x = x ./ 4;
-for i=1:size(x, 2) - 3
+for i=801:size(x, 2) - 3
   test_set = [test_set, x(i:i+1)'];
 end
-expected_values = x(3:size(x, 2));
+expected_values = x(803:size(x, 2));
 
 W = {};
 
@@ -33,7 +33,7 @@ W.B = [ -0.1662   -2.2192   -2.7086   -2.2610   -1.2674    0.0400 ;
 
 W.C = [ -1.2167    2.0684   -1.0270   -2.0661    0.2933 ];
 
-name = lvl(size(fieldnames(W), 1) + 1);
+name = char('@' + size(fieldnames(W), 1) + 1);
 err = [];
 for i = 1 : size(test_set, 2)
   out = run_neural_network(W, test_set(:,i), @tanh);
