@@ -1,0 +1,36 @@
+% Run the learn algorithm.
+
+matlabpool('local', 3);
+
+for dim_1=5:2:9
+  for dim_2=dim_1-2:-2:2
+    res = cell(3,1);
+    parfor iter=1:3
+      
+      g = @tanh;
+      gp = @(x)(sech(x).^2);
+
+      DIMS = 2;
+      params = struct(...
+        'eta', 0.3, ...
+        'alpha', 0.3, ...
+        'noise_factor', 0.0001, ...
+        'hard_limit', 1500, ...
+        'adaptative_increment', 0.0001, ...
+        'adaptative_decrement', 0.01, ...
+        'adaptative_steps', 4, ...
+        'debug', false ...
+      );
+      disp(['Executing operation ' num2str(iter) ...
+                'with arch = ' num2str(dim_1) 'x' num2str(dim_2)]);
+      NEURONS = [dim_1 dim_2 1];
+      W = get_random_w([DIMS NEURONS], 0.8);
+      data = execute_learn_algorithm(W, NEURONS, g, gp, DIMS, params);
+      data.original_W = W;
+      res{iter} = data;
+    end
+    
+    save(['arch_' num2str(dim_1) 'x' num2str(dim_2) ...
+          '_data_result.mat'], 'res');
+  end
+end
