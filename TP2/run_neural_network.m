@@ -2,10 +2,11 @@ function rest = run_neural_network(W, E, g)
   O = E;
   V = struct();
   H = struct();
+  lvl = get_lvls(W);
 
   V.(lvl(1)) = O;
 
-  levels = size(fieldnames(W), 1);
+  levels = size(lvl, 1);
   for level=1:levels           % For each layer of the network
       name = lvl(level);
       w = W.(name);            % using the weight matrix

@@ -23,11 +23,12 @@ function data = execute_learn_algorithm(W, matrix_topology, g, gp, window_size, 
 	data = learn(dataset, expected, W, g, gp, params);
 
   testset_output = zeros(size(test_results));
-
-  for i=1:size(test_set, 2)
-    y = run_neural_network(W, test_set(:,i), g);
-    y = y.V.(lvl(size(fieldnames(y.V), 1)));
-    testset_output(i) = y;
-  end
+% 
+%   for i=1:size(test_set, 2)
+%     y = run_neural_network(W, test_set(:,i), g);
+%     y = y.V.(char('@'+(size(fieldnames(y.V), 1))));
+%     testset_output(i) = y;
+%   end
+%   data.testset_output = testset_output;
 
 end

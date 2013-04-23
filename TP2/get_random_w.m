@@ -6,6 +6,6 @@ function W = get_random_w(levels, abs_cap)
 
   W = struct();
   for level=1:size(levels,2)-1
-    W.(lvl(level)) = cap(rand(levels(level+1), levels(level)+1));
+    W.(char('@' + level)) = cap(rand(levels(level+1), levels(level)+1));
   end
 end

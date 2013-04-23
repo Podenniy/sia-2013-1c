@@ -9,6 +9,9 @@ function data=learn(dataset, expected, W, g, gp, parameters)
   alpha = param('alpha', 0);
   % When the mean error is lesser than 'error_cap', the algorithm halts
   error_cap = param('error_cap', 0.05);
+  % If set to a number > 0, don't stop until the 90th percentile is lesser
+  % than this number
+  ninetile_cap = param('ninetile_cap', 0);
   % Adds a percentual error to each weight of the network
   noise_factor = param('noise_factor', 0);
   % Halts after this many iterations if the error couldn't be reduced
@@ -23,12 +26,13 @@ function data=learn(dataset, expected, W, g, gp, parameters)
   adaptative_steps = param('adaptative_steps', 3);
   % Print debug data
   debug = param('debug', false);
+  lvl = get_lvls(W);
   
   tic;
   
   adaptative_epsilon = 0.00001;
 
-  levels = size(fieldnames(W), 1);
+  levels = size(lvl, 1);
   iter = 1;
   tries = 0;
 
@@ -59,6 +63,7 @@ function data=learn(dataset, expected, W, g, gp, parameters)
     this_expected = expected(idxs);
 
     previous_changes = {};
+
     for i = 1 : levels
       name = lvl(i);
       previous_changes.(name) = zeros(size(W.(name)));
@@ -69,7 +74,9 @@ function data=learn(dataset, expected, W, g, gp, parameters)
       E = this_dataset(:,i);
       S = this_expected(i);
       
-      add_noise(W, ((tries - last_trial_update)^2) * noise_factor / tries);
+      if noise_factor > 0
+        add_noise(W, ((tries - last_trial_update)^2) * noise_factor / tries);
+      end
       networkresult = run_neural_network(W, E, g);
       V = networkresult.V;
       H = networkresult.H;
@@ -82,14 +89,22 @@ function data=learn(dataset, expected, W, g, gp, parameters)
       error(i) = norm(result - S);
     end
     mean_error = mean(error);
+    ninetile = prctile(error, 90);
 
     if mean_error < error_cap
-      break;
+      if ninetile_cap == 0
+        break;
+      else
+        if ninetile < ninetile_cap
+          break;
+        end
+      end
     end
     
     if iter > 2
       last_mean_error = mean_errors(iter-1);
-      if mean_error + adaptative_epsilon < last_mean_error
+      if (mean_error + adaptative_epsilon < last_mean_error) || ...
+         (ninetile + adaptative_epsilon < ninetile_errors(iter-1))
         good_steps = good_steps + 1;
         alpha = original_alpha;
 
@@ -113,7 +128,7 @@ function data=learn(dataset, expected, W, g, gp, parameters)
       iter = iter - 1;
     else
       mean_errors(iter) = mean_error;
-      ninetile_errors(iter) = prctile(error, 90);
+      ninetile_errors(iter) = ninetile;
       last_trial_update = tries;
     end
     
@@ -124,6 +139,12 @@ function data=learn(dataset, expected, W, g, gp, parameters)
       display(['iter=' num2str(iter) ', trials=' num2str(tries) ...
                ', error=' num2str(mean_error) ', noise_factor=' ...
                num2str(((tries - last_trial_update)^2) * noise_factor / tries)]);
+      figure(1);
+      plot(mean_errors(1:iter-1));
+      figure(2);
+      plot(ninetile_errors(1:iter-1));
+      figure(3);
+      plot(ETA(1:tries));
     end
   end
   if debug

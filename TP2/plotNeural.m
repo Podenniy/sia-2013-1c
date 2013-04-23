@@ -1,5 +1,6 @@
 function plotNeural(W, filename)
 
+  lvl = get_lvls(W);
   nodes = [];
   f = fopen(filename, 'w');
   fprintf(f, 'digraph{');
