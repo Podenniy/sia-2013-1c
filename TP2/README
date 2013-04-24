@@ -1,0 +1,6 @@
+To run the best network do:
+
+    octave run_best.m inputfile.mat
+
+Where inputfile.mat is a matlab/octave file containing a set of time series points in a variable x
+
