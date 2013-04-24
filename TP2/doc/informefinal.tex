@@ -136,8 +136,8 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
     \subsubsection{$\eta$ adaptativo}
 
     Esta mejora busca alterar el valor de $\eta$ de acuerdo al progreso del entrenamiento.
-    Para esto se considera que si se encuentra una seguidilla de pasos que disminuyen el error, entonces se tiene un buen camino de entrenamiento y por lo tanto se aumenta 
-    el valor para explotar este camino. Y si por el contrario nos encontramos en un mal camino, se disminuye el valor.
+    Para esto se considera que si se encuentra una seguidilla de $k$ pasos que disminuyen el error, entonces se tiene un buen camino de entrenamiento y por lo tanto se aumenta 
+    el valor en una constante $a$ para explotar este camino. Y si por el contrario nos encontramos en un mal camino, se disminuye el valor en un porcentaje $b$.
     Cuando se disminuye el valor, se desactiva temporalmente \texttt{Momentum} y se descarta el paso realizado.
     Una vez que se encuentra un paso que disminuye el error se reactiva \texttt{Momentum}.
 
