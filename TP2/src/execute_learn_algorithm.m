@@ -19,7 +19,8 @@ function data = execute_learn_algorithm(W, matrix_topology, g, gp, window_size, 
 
   testset_output = zeros(size(test_results));
  
-   for i=1:size(test_set, 2)
+  err = []
+  for i=1:size(test_set, 2)
      y = run_neural_network(W, test_set(:,i), g);
      y = y.V.(char('@'+(size(fieldnames(y.V), 1))));
      testset_output(i) = y;
