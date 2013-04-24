@@ -97,6 +97,9 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
 \section{Implementación}
 
+    Se implementó una red multicapa del tipo \texttt{Feed Forward}, usando el algoritmo \texttt{Back Propagation} para el entrenamiento. La distribución inicial de pesos 
+    se generó de manera aleatoria con valores acotados a un intervalo dependiente de la función de activación en uso. Como medida del error se usó la función de error cuadrático.
+
     \subsection{Funciones de activación}
     Se utilizaron las siguientes funciones de activación, y sus respectivas derivadas:
 
@@ -117,30 +120,28 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
         \begin{itemize}
             \item Sigmoidea
-                Para la entrada: \[ \xi_{i} = (x_{i} + 4) / 8 \]
+                Para la entrada: \[ \xi_{i} = \frac{x_{i} + 4}{8} \]
                 Para la salida: \[ o_{i} = x_{i} * 4 \]
             \item Tangente hiperbólica
                 Para la entrada: \[ \xi_{i} = x / 4 \]
-                Para la salida: \[ o_{i} = (x - 0.5) * 8 \]
+                Para la salida: \[ o_{i} = x - 0.5) * 8 \]
         \end{itemize}
 
         Se puede ver fácilmente que la función para normalizar una entrada es la inversa de la función que normaliza la salida.
 
-Se implemento una red multicapa del tipo \texttt{Feed Forward}, usando el algoritmo \texttt{Back Propagation} para el entrenamiento. La distribucion inicial de pesos se genero de manera aleatoria con valores acotados a un intervalo dependiente de la funcion de activacion en uso. Como medida del error se uso la funcion de error cuadratico.
-
 \subsection{Mejoras}
 
-\subsubsection{Momentum}
+    \subsubsection{Momentum}
 
-\subsubsection{\eta adaptativo}
+    \subsubsection{$\eta$ adaptativo}
 
-Esta mejora busca alterar el valor de \eta de acuerdo al progreso del entrenamiento.
-Para esto se considera que si nos encontramos en una seguidilla de pasos que disminuyen el error estamos en un buen camino de entrenamiento y por lo tanto se aumenta el valor para explotar este camino.
-Y si por el contrario nos encontramos en un mal camino, disminuimos el valor.
-Cuando se disminuye el valor, se desactiva temporalmente \texttt{Momentum} y se descarta el paso realizado.
-Una vez que se encuentra un paso que disminuye el error se reactive \texttt{Momentum}.
+    Esta mejora busca alterar el valor de $\eta$ de acuerdo al progreso del entrenamiento.
+    Para esto se considera que si se encuentra una seguidilla de pasos que disminuyen el error, entonces se tiene un buen camino de entrenamiento y por lo tanto se aumenta 
+    el valor para explotar este camino. Y si por el contrario nos encontramos en un mal camino, se disminuye el valor.
+    Cuando se disminuye el valor, se desactiva temporalmente \texttt{Momentum} y se descarta el paso realizado.
+    Una vez que se encuentra un paso que disminuye el error se reactiva \texttt{Momentum}.
 
-\subsubsection{Ruido}
+    \subsubsection{Ruido}
 
 \section{Resultados}
 
