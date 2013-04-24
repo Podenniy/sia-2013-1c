@@ -41,4 +41,4 @@ for i = 1 : size(test_set, 2)
 end
 
 figure(1); plot(err);
-
+display(mean(err));

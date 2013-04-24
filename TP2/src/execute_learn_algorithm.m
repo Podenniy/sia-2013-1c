@@ -23,7 +23,9 @@ function data = execute_learn_algorithm(W, matrix_topology, g, gp, window_size, 
      y = run_neural_network(W, test_set(:,i), g);
      y = y.V.(char('@'+(size(fieldnames(y.V), 1))));
      testset_output(i) = y;
+     err = [err norm(y - test_results(i))];
    end
    data.testset_output = testset_output;
+   disp(mean(err));
 
 end
