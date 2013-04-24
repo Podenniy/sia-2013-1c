@@ -92,7 +92,7 @@
 
 \section{Definición del problema}
 
-El problema consiste en la implementación de una red neuronal multicapa que realice la predicción de series temporales. Para ello se supone que $x(t)$ (el valor de la 
+El problema consiste en la implementación de una red neuronal multicapa con aprendizaje supervisado que realice la predicción de series temporales. Para ello se supone que $x(t)$ (el valor de la 
 serie en el paso temporal $t$) es alguna función desconocida de los valores de la serie en pasos anteriores, es decir, $x(t) = f (x(t - 1), x(t - 2), x(t - 3), \dots)$. 
 La red neuronal deberá poder aproximar a la función $f$ desconocida. A priori no se conoce cuantos pasos temporales previos hay que considerar como argumento 
 de la función $f$. Se utilizaron siempre menos de cuatro.
@@ -126,7 +126,7 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
                 Para la salida: \[ o_{i} = x_{i} * 4 \]
             \item Tangente hiperbólica
                 Para la entrada: \[ \xi_{i} = x / 4 \]
-                Para la salida: \[ o_{i} = x - 0.5) * 8 \]
+                Para la salida: \[ o_{i} = (x - 0.5) * 8 \]
         \end{itemize}
 
         Se puede ver fácilmente que la función para normalizar una entrada es la inversa de la función que normaliza la salida.
@@ -134,6 +134,7 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
     \subsection{Disminución de la cantidad de entrenamientos descartados}
 
         %TODO: Esto no deberia ir despues de las mejoras? O al menos despues de mencionar eta adaptativo?
+        \label{less_rollbacks}
         Se consideró incorporar otros criterios para deshacer entrenamientos utilizando la estrategia de entrenamiento adaptativo. Además de considerar el error cuadrático medio, 
         se consideró como un valor relevante el de un percentil alto (se seleccionó el percentil $90$) de los errores del conjunto de entrenamiento. El objetivo es no descartar 
         entrenamientos que son mejores, aunque el error medio no disminuya. Dos nuevos criterios utilizando este nuevo parámetro son:
@@ -145,7 +146,7 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
     \subsection{Selección de los parámetros de configuración}
 
-        \label{less_rollbacks}
+        \label{configuracion}
         El entrenamiento de la red neuronal con las estrategias implementadas tiene una extensa variedad de parámetros de configuración. Además de $\eta$, 
         el coeficiente de aprendizaje, el entrenamiento con la estrategia \textit{Momentum} requiere seleccionar un valor para $\alpha$, el término que pesa el descenso promedio. 
         La estrategia de entrenamiento adaptativo requiere la selección de más parámetros: los factores $a$, $b$, y la cantidad de pasos $k$.
@@ -157,7 +158,7 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         \subsubsection{Momentum}
 
         Momentum considera los valores de $\delta w_{ij}$ de pasos anteriores a la hora de actualizar los pesos del paso actual.
-        En particular, se agrega al cambio dado por \texttt{Back Propagation}, el cambio de la iteracion anterior pesado por un factor $\alpha$.
+        En particular, se agrega al cambio dado por \texttt{Back Propagation}, el cambio de la iteración anterior pesado por un factor $\alpha$.
 
         \subsubsection{$\eta$ adaptativo}
 
@@ -169,14 +170,14 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
         \subsubsection{Ruido}
 
-        Se intento introducir ruido a los pesos de la red entre pasos para evitar estancarse en minimos locales.
-        Se agrego a cada peso un valor aleatorio entre 0 y 1, adjustado por la cantidad de pasos que no disminuyeron el error y una constante.
-        Esta optimizacion fue descartada por que rapidamente encontramos que no producia resultados positivos.
+        Se intentó introducir ruido a los pesos de la red entre pasos para evitar estancarse en mínimos locales.
+        Se agregó a cada peso un valor aleatorio entre 0 y 1, adjustado por la cantidad de pasos que no disminuyeron el error, y una constante.
+        Esta optimización fue descartada por que rápidamente se encontró que no producía resultados positivos.
 
     \subsection{Conjunto de entrenamiento y prueba}
 
     Se tiene un conjunto de 1000 puntos de la serie a ser generalizada.
-    Para el entrenamiento de la red se uso los primeros 800 puntos, y los restantes 200 puntos se usaron como conjunto de prueba.
+    Para el entrenamiento de la red se usó los primeros 800 puntos, y los restantes 200 puntos se usaron como conjunto de prueba.
 
 \section{Resultados}
 
