@@ -146,7 +146,7 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
     \subsection{Selección de los parámetros de configuración}
 
-        \label{configuracion}
+        \label{sec:configuracion}
         El entrenamiento de la red neuronal con las estrategias implementadas tiene una extensa variedad de parámetros de configuración. Además de $\eta$, 
         el coeficiente de aprendizaje, el entrenamiento con la estrategia \textit{Momentum} requiere seleccionar un valor para $\alpha$, el término que pesa el descenso promedio. 
         La estrategia de entrenamiento adaptativo requiere la selección de más parámetros: los factores $a$, $b$, y la cantidad de pasos $k$.
@@ -218,8 +218,9 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
     A partir de este resultado, optamos por concentrar nuestra atencion en redes construidas con la funcion \textit{Tangente hiperbolica}.
 
     \subsection{Optimizacion de parametros}
+    \label{sec:parametros-optimos}
 
-        Se realizo un analisis de los valores de los parametros de ejecucion. Se muestran los resultados obtenidos para cada variable en la \ref{tabla_configuracion}. 
+        Se muestran los resultados obtenidos de la seleccion despcripta en la seccion \ref{sec:configuracion} para cada variable en la \ref{tabla_configuracion}. 
         Al respecto, se hacen las siguientes observaciones:
 
         \begin{itemize}
@@ -245,6 +246,10 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         Con este analisis encontramos que los valores utilizados como parametros en la seccion \ref{sec:comparacion-activacion} resultaron muy cercanos a los optimos.
         El unico parametro con valor distinto es $a$ con un valro de $0.001$.
 
+    \subsection{Optimizacion de arquitectura}
+    \lable{sec:arquitectura-optima}
+
+    % FILL ME IN
 
 \section{Conclusiones}
 
