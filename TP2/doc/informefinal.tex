@@ -97,11 +97,19 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
 \section{Implementacion}
 
+Se implemento una red multicapa del tipo \texttt{Feed Forward}, usando el algoritmo \texttt{Back Propagation} para el entrenamiento. La distribucion inicial de pesos se genero de manera aleatoria con valores acotados a un intervalo dependiente de la funcion de activacion en uso. Como medida del error se uso la funcion de error cuadratico.
+
 \subsection{Mejoras}
+
+\subsubsection{Momentum}
 
 \subsubsection{\eta adaptativo}
 
-\subsubsection{Momentum}
+Esta mejora busca alterar el valor de \eta de acuerdo al progreso del entrenamiento.
+Para esto se considera que si nos encontramos en una seguidilla de pasos que disminuyen el error estamos en un buen camino de entrenamiento y por lo tanto se aumenta el valor para explotar este camino.
+Y si por el contrario nos encontramos en un mal camino, disminuimos el valor.
+Cuando se disminuye el valor, se desactiva temporalmente \texttt{Momentum} y se descarta el paso realizado.
+Una vez que se encuentra un paso que disminuye el error se reactive \texttt{Momentum}.
 
 \subsubsection{Ruido}
 
