@@ -133,6 +133,9 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
     \subsubsection{Momentum}
 
+    Momentum considera los valores de $\delta w_{ij}$ de pasos anteriores a la hora de actualizar los pesos del paso actual.
+    En particular, se agrega al cambio dado por \texttt{Back Propagation}, el cambio de la iteracion anterior pesado por un factor $\alpha$.
+
     \subsubsection{$\eta$ adaptativo}
 
     Esta mejora busca alterar el valor de $\eta$ de acuerdo al progreso del entrenamiento.
