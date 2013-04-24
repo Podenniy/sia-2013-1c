@@ -94,16 +94,19 @@
 
 El problema consiste en la implementación de una red neuronal multicapa con aprendizaje supervisado que realice la predicción de series temporales. Para ello se supone que $x(t)$ (el valor de la 
 serie en el paso temporal $t$) es alguna función desconocida de los valores de la serie en pasos anteriores, es decir, $x(t) = f (x(t - 1), x(t - 2), x(t - 3), \dots)$. 
-La red neuronal deberá poder aproximar a la función $f$ desconocida. Inicialmente no se conoce cuantos pasos temporales previos hay que considerar como argumento 
-de la función $f$. Se utilizaron siempre menos de cuatro.
+La red neuronal deberá poder aproximar a la función $f$ desconocida. No se
+conoce la cantidad de valores anteriores de la serie respecto a los cuales $f$ es función.
 
 \section{Implementación}
 
-    Se implementó una red multicapa del tipo \texttt{Feed Forward}, usando el algoritmo \texttt{Back Propagation} para el entrenamiento. La distribución inicial de pesos 
-    se generó de manera aleatoria con valores acotados a un intervalo dependiente de la función de activación en uso. Como medida del error se usó la función de error cuadrático.
+    Se implementó una red multicapa de tipo \texttt{Feed Forward}, usando el
+    algoritmo \texttt{Back Propagation} para el entrenamiento de la misma.
+    La distribución inicial de pesos se generó de manera aleatoria con valores
+    acotados a un intervalo dependiente de la función de activación en uso.
+    Como medida del error se usó la función de error cuadrático medio.
 
     \subsection{Funciones de activación}
-    Se utilizaron las siguientes funciones de activación, y sus respectivas derivadas:
+    Se utilizaron las siguientes funciones de activación y sus respectivas derivadas:
 
     \begin{itemize}
         \item Función Sigmoidea
@@ -131,7 +134,6 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
                 Para la salida: \[ o_{i} = (x - 0.5) * 8 \]
         \end{itemize}
 
-
     \subsection{Mejoras}
 
         \subsubsection{Momentum}
@@ -142,32 +144,42 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         \subsubsection{$\eta$ adaptativo}
 
         Esta mejora busca alterar el valor de $\eta$ de acuerdo al progreso del entrenamiento.
-        Para esto se considera que si se encuentra una seguidilla de $k$ pasos que disminuyen el error, entonces se tiene un buen camino de entrenamiento y por lo tanto se aumenta 
-        el valor en una constante $a$ para explotar este camino. Y si por el contrario nos encontramos en un mal camino, se disminuye el valor en un porcentaje $b$.
-        Cuando se disminuye el valor, se desactiva temporalmente \texttt{Momentum} y se descarta el paso realizado.
-        Una vez que se encuentra un paso que disminuye el error se reactiva \texttt{Momentum}.
+        Para esto se considera que si se encuentra una secuencia de $k$ pasos que disminuyen el error, entonces se tiene un buen camino de entrenamiento y por lo tanto se aumenta 
+        el valor en una constante $a$ para continuar avanzando en este sentido.
+        Y si por el contrario se encuentra en un mal camino, se disminuye el valor en un porcentaje $b$.
+        Cuando se disminuye el valor, se desactiva temporalmente la mejora \texttt{Momentum} y se descarta el paso realizado.
+        Una vez que se encuentra un paso que disminuye el error se reactiva la
+        estrategia de \texttt{Momentum}.
 
         \subsubsection{Ruido}
 
-        Se intentó introducir ruido a los pesos de la red entre pasos para evitar estancarse en mínimos locales.
-        Se agregó a cada peso un valor aleatorio entre 0 y 1, adjustado por la cantidad de pasos que no disminuyeron el error, y una constante.
-        Esta optimización fue descartada por que rápidamente se encontró que no producía resultados positivos.
+        Se intentó introducir ruido a los pesos de la red entre pasos para
+        evitar caer en mínimos locales.
+        Se agregó a cada peso un valor aleatorio entre 0 y 1, adjustado por la
+        cantidad de \textit{rollbacks} (entrenamientos que se descartaron por no
+        disminuir el error), y una constante.
+        Esta optimización fue descartada porque en manera consistente no
+        mejoraba los resultados obtenidos.
 
     \subsection{Conjunto de entrenamiento y prueba}
 
     Se tiene un conjunto de 1000 puntos de la serie a ser generalizada.
-    Para el entrenamiento de la red se usó los primeros 800 puntos, y los restantes 200 puntos se usaron como conjunto de prueba.
-    Siempre que se habla del error medio de una red, se refiere al error sobre el conjunto de prueba.
+    Para el entrenamiento de la red se utilizaron los primeros 800 puntos,
+    y los restantes 200 puntos fueron utilizados como conjunto de prueba.
+    Siempre que se habla del error medio de una red, se refiere al error
+    cuadrático medio del conjunto de prueba.
 
     \subsection{Disminución de la cantidad de entrenamientos descartados}
         \label{less_rollbacks}
         Se consideró incorporar otros criterios para deshacer entrenamientos utilizando la estrategia de entrenamiento adaptativo. Además de considerar el error cuadrático medio, 
         se consideró como un valor relevante el de un percentil alto (se seleccionó el percentil $90$) de los errores del conjunto de entrenamiento. El objetivo es no descartar 
-        entrenamientos que son mejores, aunque el error medio no disminuya. Dos nuevos criterios utilizando este nuevo parámetro son:
+        entrenamientos que son mejores, aunque el error medio no disminuya. Dos
+        nuevos criterios utilizando este nuevo parámetro son no realizar
+        \textit{rollback} si:
 
         \begin{itemize}
-            \item Se hace rollback si disminuye el error cuadrático medio \textbf{y} disminuye el percentil 90.
-            \item Se hace rollback si disminuye el error cuadrático medio \textbf{o} disminuye el percentil 90.
+            \item Disminuye el error cuadrático medio \textbf{y} disminuye el percentil 90.
+            \item Disminuye el error cuadrático medio \textbf{o} disminuye el percentil 90.
         \end{itemize}
 
     \subsection{Selección de los parámetros de configuración}
@@ -176,20 +188,25 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         El entrenamiento de la red neuronal con las estrategias implementadas tiene una extensa variedad de parámetros de configuración. Además de $\eta$, 
         el coeficiente de aprendizaje, el entrenamiento con la estrategia \textit{Momentum} requiere seleccionar un valor para $\alpha$, el término que pesa el descenso promedio. 
         La estrategia de entrenamiento adaptativo requiere la selección de más parámetros: los factores $a$, $b$, y la cantidad de pasos $k$.
-        Se determinaron valores iniciales que producían resultados suficientemente satisfactorios en 1500 iteraciones . Se consideró cada parámetro independientemente de 
-        los demás y se iteró por valores relevantes para cada variable.
+        Se determinaron valores iniciales que producían resultados suficientemente satisfactorios en 1500 iteraciones. Se consideró cada parámetro independientemente de los demás y se iteró por valores relevantes para cada variable.
 
 \section{Resultados y Conclusiones}
 
     \subsection{Comparación de Funciones de Activación}
     \label{sec:comparacion-activacion}
 
-    Para realizar una comparación entre las funciones de activación utilizadas, se definió un set de arquitecturas de prueba de manera arbitraria.
-    Para esta comparacion, se mantuvieron fijos los parámetros de entrada de la red y se limito la cantidad de iteraciones a 1500.
-    Cabe destacar que, según la función de activación usada en cada caso, se debieron acotar los valores aleatorios de los pesos utilizados como entrada al algoritmo de aprendizaje
-    supervisado. Como era de esperarse, para la función sigmoidea, hubo que generar números muy pequeños en módulo (cercanos a 0), para que no se saturen las conexiones, y se impida el aprendizaje.
-    Para el caso de la tangente hiperbólica, en cambio, esos pesos  iniciales pequeños no retornaron resultados positivos, como si lo hicieron las pruebas realizadas con valores 
-    aleatorios pero con cotas mayores.
+    Para realizar una comparación entre las funciones de activación utilizadas,
+    se definió un set de arquitecturas de prueba de manera arbitraria.
+    Para esta comparacion, se mantuvieron fijos los parámetros de entrada de la
+    red y se limitó la cantidad de iteraciones a 1500.
+    Según la función de activación usada en cada caso, se acotaron los valores
+    aleatorios de los pesos utilizados como entrada al algoritmo de aprendizaje
+    supervisado. Como era de esperarse, para la función sigmoidea, hubo que
+    generar números muy pequeños en módulo (cercanos a 0), para que no se saturen
+    las conexiones, y se impida el aprendizaje.
+    Para el caso de la tangente hiperbólica, en cambio, esos pesos iniciales
+    pequeños no retornaron resultados positivos, como si lo hicieron las pruebas
+    realizadas con valores aleatorios pero con cotas mayores.
 
      \begin{table}[H]
 
@@ -215,17 +232,18 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
     \end{table}
 
-    Se observa que las redes obtenidas con la funcion $tanh$ son ampliamente superiores a sus contrapartes con la funcion \textit{Sigmoidea}.
-    A partir de este resultado, optamos por concentrar nuestra atencion en redes construidas con la funcion \textit{Tangente hiperbolica}.
+    Se observa en \label{table-comparation-act-functions} que las redes obtenidas con la función $tanh$ son ampliamente superiores a sus contrapartes con la función \textit{Sigmoidea}.
+    A partir de este resultado, se prosiguió el análisis en redes construidas con la función \textit{tangente hiperbólica}.
 
-    \subsection{Optimizacion de parametros}
+    \subsection{Optimización de parámetros}
     \label{sec:parametros-optimos}
 
-        Se muestran los resultados obtenidos de la seleccion despcripta en la seccion \ref{sec:configuracion} para cada variable en la tabla \ref{tabla_configuracion}. 
+        Se muestran los resultados obtenidos de la selección descripta en la sección \ref{sec:configuracion} para cada variable en la tabla \ref{tabla_configuracion}. 
         Al respecto, se hacen las siguientes observaciones:
 
         \begin{itemize}
-        \item El mejor valor para el coeficiente $alpha$ es de $0.3$, mucho menor que el sugerido $0.9$ de la cátedra.
+        \item El mejor valor para el coeficiente $alpha$ es de $0.3$, mucho
+        menor que el sugerido $0.9$.
         \item El mejor valor del parámetro $a$ es de $0.0001$. Este valor es menor de lo esperado, ya que en pruebas preliminares un valor de $0.01$ 
               no arrojaba peores resultados que correr el algoritmo sin la estrategia de entrenamiento adaptativo.
         \item El mejor valor del parámetro $b$ es de $0.01$. Esto es mayor de lo esperado, el valor que se utilizaba inicialmente era de 0.001.
@@ -244,8 +262,10 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
             \label{tabla_configuracion}
         \end{table}
 
-        Con este analisis encontramos que los valores utilizados como parametros en la seccion \ref{sec:comparacion-activacion} resultaron muy cercanos a los optimos.
-        El unico parametro con valor distinto es $a$ con un valor de $0.001$.
+        Con este analisis encontramos que los valores utilizados como parámetros
+        en la sección \ref{sec:comparacion-activacion} resultaron muy cercanos a
+        los óptimos.
+        El unico parámetro con valor distinto es $a$ con un valor de $0.001$.
 
     \subsection{Estrategia de Rollback}
 
@@ -263,20 +283,22 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         \label{tabla_rollbacks}
     \end{table}
 
-    \subsection{Optimizacion de arquitectura}
+    \subsection{Optimizarión de arquitectura}
     \label{sec:arquitectura-optima}
 
-    Una vez conocidos los parametros optimos, buscamos optimizar la arquitectura utilizando estos valores.
+    Una vez conocidos los parámetros óptimos, se buscó optimizar la arquitectura utilizando estos valores.
     Para esto se corrieron repetidas ejecuciones de un abanico de arquitecturas de 2 entradas.
-    No se utilizaron arquitecturas de 3 entradas ya que en la tabla \ref{table-comparation-act-functions} se observo que las redes de 3 entradas no presentan mejoras sustanciales sobre las de 2.
+    No se utilizaron arquitecturas de 3 entradas ya que en la tabla \ref{table-comparation-act-functions} se observó que las redes de 3 entradas no presentan mejoras sustanciales sobre las de 2.
 
     Las arquitecturas que se consideraron tienen 2 capas ocultas.
-    La siguiente figura muestra los menores errores obtenidos en estas ejecuciones para cada arquitectura.
-    Cuando decimos que una arquitectura $NxM$ es $N$ en la primer capa oculta y $M$ en la segunda.
+    La siguiente figura muestra los menores errores obtenidos en estas
+    ejecuciones para cada arquitectura. Se describe una arquitectura de $N$
+    neuronas en la primer capa oculta y $M$ neuronas en la segunda capa oculta
+    como una arquitectura de $NxM$.
 
     \begin{figure}[H]
         \includegraphics[scale=0.5]{./images/arquitecturas.png}
-        \caption{Error cuadratico medio obtenido para arquitecturas con 2 entradas variando la cantidad de neuronas en la primera y segunda capa oculta}
+        \caption{Error cuadrático medio obtenido para arquitecturas con 2 entradas variando la cantidad de neuronas en la primera y segunda capa oculta}
         \label{fig:arquitecturas}
     \end{figure}
 
