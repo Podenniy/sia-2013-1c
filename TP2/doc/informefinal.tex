@@ -19,6 +19,8 @@
 \usepackage{listings}
 \usepackage{bm}
 \usepackage{times}
+\usepackage{marvosym}
+
 
 \begin{document}
 \setcounter{secnumdepth}{5}
@@ -129,31 +131,52 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
         Se puede ver fácilmente que la función para normalizar una entrada es la inversa de la función que normaliza la salida.
 
-\subsection{Mejoras}
+    \subsection{Disminución de la cantidad de entrenamientos descartados}
 
-    \subsubsection{Momentum}
+        %TODO: Esto no deberia ir despues de las mejoras? O al menos despues de mencionar eta adaptativo?
+        Se consideró incorporar otros criterios para deshacer entrenamientos utilizando la estrategia de entrenamiento adaptativo. Además de considerar el error cuadrático medio, 
+        se consideró como un valor relevante el de un percentil alto (se seleccionó el percentil $90$) de los errores del conjunto de entrenamiento. El objetivo es no descartar 
+        entrenamientos que son mejores, aunque el error medio no disminuya. Dos nuevos criterios utilizando este nuevo parámetro son:
 
-    Momentum considera los valores de $\delta w_{ij}$ de pasos anteriores a la hora de actualizar los pesos del paso actual.
-    En particular, se agrega al cambio dado por \texttt{Back Propagation}, el cambio de la iteracion anterior pesado por un factor $\alpha$.
+        \begin{itemize}
+            \item Se hace rollback si disminuye el error cuadrático medio \textbf{y} disminuye el percentil 90.
+            \item Se hace rollback si disminuye el error cuadrático medio \textbf{o} disminuye el percentil 90.
+        \end{itemize}
 
-    \subsubsection{$\eta$ adaptativo}
+    \subsection{Selección de los parámetros de configuración}
 
-    Esta mejora busca alterar el valor de $\eta$ de acuerdo al progreso del entrenamiento.
-    Para esto se considera que si se encuentra una seguidilla de $k$ pasos que disminuyen el error, entonces se tiene un buen camino de entrenamiento y por lo tanto se aumenta 
-    el valor en una constante $a$ para explotar este camino. Y si por el contrario nos encontramos en un mal camino, se disminuye el valor en un porcentaje $b$.
-    Cuando se disminuye el valor, se desactiva temporalmente \texttt{Momentum} y se descarta el paso realizado.
-    Una vez que se encuentra un paso que disminuye el error se reactiva \texttt{Momentum}.
+        \label{less_rollbacks}
+        El entrenamiento de la red neuronal con las estrategias implementadas tiene una extensa variedad de parámetros de configuración. Además de $\eta$, 
+        el coeficiente de aprendizaje, el entrenamiento con la estrategia \textit{Momentum} requiere seleccionar un valor para $\alpha$, el término que pesa el descenso promedio. 
+        La estrategia de entrenamiento adaptativo requiere la selección de más parámetros: los factores $a$, $b$, y la cantidad de pasos $k$.
+        Se determinaron valores iniciales que producían resultados suficientemente satisfactorios en 1500 iteraciones . Se consideró cada parámetro independientemente de 
+        los demás y se iteró por valores relevantes para cada variable.
 
-    \subsubsection{Ruido}
+    \subsection{Mejoras}
 
-    Se intento introducir ruido a los pesos de la red entre pasos para evitar estancarse en minimos locales.
-    Se agrego a cada peso un valor aleatorio entre 0 y 1, adjustado por la cantidad de pasos que no disminuyeron el error y una constante.
-    Esta optimizacion fue descartada por que rapidamente encontramos que no producia resultados positivos.
+        \subsubsection{Momentum}
 
-\subsection{Conjunto de entrenamiento y prueba}
+        Momentum considera los valores de $\delta w_{ij}$ de pasos anteriores a la hora de actualizar los pesos del paso actual.
+        En particular, se agrega al cambio dado por \texttt{Back Propagation}, el cambio de la iteracion anterior pesado por un factor $\alpha$.
 
-Se tiene un conjunto de 1000 puntos de la serie a ser generalizada.
-Para el entrenamiento de la red se uso los primeros 800 puntos, y los restantes 200 puntos se usaron como conjunto de prueba.
+        \subsubsection{$\eta$ adaptativo}
+
+        Esta mejora busca alterar el valor de $\eta$ de acuerdo al progreso del entrenamiento.
+        Para esto se considera que si se encuentra una seguidilla de $k$ pasos que disminuyen el error, entonces se tiene un buen camino de entrenamiento y por lo tanto se aumenta 
+        el valor en una constante $a$ para explotar este camino. Y si por el contrario nos encontramos en un mal camino, se disminuye el valor en un porcentaje $b$.
+        Cuando se disminuye el valor, se desactiva temporalmente \texttt{Momentum} y se descarta el paso realizado.
+        Una vez que se encuentra un paso que disminuye el error se reactiva \texttt{Momentum}.
+
+        \subsubsection{Ruido}
+
+        Se intento introducir ruido a los pesos de la red entre pasos para evitar estancarse en minimos locales.
+        Se agrego a cada peso un valor aleatorio entre 0 y 1, adjustado por la cantidad de pasos que no disminuyeron el error y una constante.
+        Esta optimizacion fue descartada por que rapidamente encontramos que no producia resultados positivos.
+
+    \subsection{Conjunto de entrenamiento y prueba}
+
+    Se tiene un conjunto de 1000 puntos de la serie a ser generalizada.
+    Para el entrenamiento de la red se uso los primeros 800 puntos, y los restantes 200 puntos se usaron como conjunto de prueba.
 
 \section{Resultados}
 
@@ -192,6 +215,34 @@ Para el entrenamiento de la red se uso los primeros 800 puntos, y los restantes 
         %% TODO: reflejar en palabras lo que diga la tabla
 
     \end{table}
+
+    \subsection{MISSING SUBSECTION NAME}
+        Respecto a \ref{less_rollbacks}, la disminución de la cantidad de entrenamientos descartados, se puede ver que la estrategia de no hacer rollback 
+        si el percentil 90 disminuye a pesar de que aumente el error cuadrático medio disminuye la cantidad de \textit{rollbacks} sin comprometer el resultado.
+
+        Respecto a \ref{configuracion}, la selección de los parámetros de configuración, se muestran los resultados obtenidos para cada variable en la \ref{tabla_configuracion}. 
+        Al respecto, se hacen las siguientes observaciones:
+
+        \begin{itemize}
+        \item El mejor valor para el coeficiente $alpha$ es de $0.3$, mucho menor que el sugerido $0.9$ de la cátedra.
+        \item El mejor valor del parámetro $a$ es de $0.0001$. Este valor es menor de lo esperado, ya que en pruebas preliminares un valor de $0.01$ 
+              no arrojaba peores resultados que correr el algoritmo sin la estrategia de entrenamiento adaptativo.
+        \item El mejor valor del parámetro $b$ es de $0.01$. Esto es mayor de lo esperado, el valor que se utilizaba inicialmente era de 0.001.
+        \end{itemize}
+
+        \begin{table}
+            \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                Parámetro & Minimo valor & Incremento & Máximo valor & Mejor valor \\ \hline
+                $alpha$ & $0.1$ & $+ 0.1$ & $0.9$ & $0.3$ \\ \hline
+                $a$ & $0.00001$ & $\Cross 10$ & $0.01$ & $0.0001$ \\ \hline
+                $b$ & $0.00001$ & $\Cross 10$ & $0.01$ & $0.01$ \\ \hline
+                $k$ & $1$ & $+ 1$ & $5$ & $4$ \\ \hline
+            \end{tabular}
+            \caption{Parámetros de configuración de la red neuronal}
+            \label{tabla_configuracion}
+        \end{table}
+
 
 \section{Conclusiones}
 
