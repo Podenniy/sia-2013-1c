@@ -122,9 +122,11 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
         \begin{itemize}
             \item Sigmoidea
+
                 Para la entrada: \[ \xi_{i} = \frac{x_{i} + 4}{8} \]
                 Para la salida: \[ o_{i} = x_{i} * 4 \]
             \item Tangente hiperbólica
+
                 Para la entrada: \[ \xi_{i} = x / 4 \]
                 Para la salida: \[ o_{i} = (x - 0.5) * 8 \]
         \end{itemize}
@@ -178,6 +180,7 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
     Se tiene un conjunto de 1000 puntos de la serie a ser generalizada.
     Para el entrenamiento de la red se usó los primeros 800 puntos, y los restantes 200 puntos se usaron como conjunto de prueba.
+    Siempre que se habla del error medio de una red, se refiere al error sobre el conjunto de prueba.
 
 \section{Resultados y Conclusiones}
 
@@ -230,7 +233,7 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         \item El mejor valor del parámetro $b$ es de $0.01$. Esto es mayor de lo esperado, el valor que se utilizaba inicialmente era de 0.001.
         \end{itemize}
 
-        \begin{table}
+        \begin{table}[H]
             \begin{tabular}{|c|c|c|c|c|}
                 \hline
                 Parámetro & Minimo valor & Incremento & Máximo valor & Mejor valor \\ \hline
@@ -248,6 +251,20 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 
     \subsection{Optimizacion de arquitectura}
     \label{sec:arquitectura-optima}
+
+    Una vez conocidos los parametros optimos, buscamos optimizar la arquitectura utilizando estos valores.
+    Para esto se corrieron repetidas ejecuciones de un abanico de arquitecturas de 2 entradas.
+    No se utilizaron arquitecturas de 3 entradas ya que en la tabla \label{table-comparation-act-functions} se observo que las redes de 3 entradas no presentan mejoras sustanciales sobre las de 2.
+
+    Las arquitecturas que se consideraron tienen 2 capas ocultas.
+    La siguiente figura muestra los menores errores obtenidos en estas ejecuciones para cada arquitectura.
+    Cuando decimos que una arquitectura $NxM$ es $N$ en la primer capa oculta y $M$ en la segunda.
+
+    \begin{figure}[H]
+        \includegraphics[scale=0.5]{./images/arquitecturas.png}
+        \caption{Error cuadratico medio obtenido para arquitecturas con 2 entradas variando la cantidad de neuronas en la primera y segunda capa oculta}
+        \label{fig:arquitecturas}
+    \end{figure}
 
     % FILL ME IN
 
