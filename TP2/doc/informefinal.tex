@@ -197,7 +197,7 @@ conoce la cantidad de valores anteriores de la serie respecto a los cuales $f$ e
 
     Para realizar una comparación entre las funciones de activación utilizadas,
     se definió un set de arquitecturas de prueba de manera arbitraria.
-    Para esta comparacion, se mantuvieron fijos los parámetros de entrada de la
+    Para esta comparación, se mantuvieron fijos los parámetros de entrada de la
     red y se limitó la cantidad de iteraciones a 1500.
     Según la función de activación usada en cada caso, se acotaron los valores
     aleatorios de los pesos utilizados como entrada al algoritmo de aprendizaje
@@ -252,7 +252,7 @@ conoce la cantidad de valores anteriores de la serie respecto a los cuales $f$ e
         \begin{table}[H]
             \begin{tabular}{|c|c|c|c|c|}
                 \hline
-                Parámetro & Minimo valor & Incremento & Máximo valor & Mejor valor \\ \hline
+                Parámetro & Mínimo valor & Incremento & Máximo valor & Mejor valor \\ \hline
                 $alpha$ & $0.1$ & $+ 0.1$ & $0.9$ & $0.3$ \\ \hline
                 $a$ & $0.00001$ & $\Cross 10$ & $0.01$ & $0.0001$ \\ \hline
                 $b$ & $0.00001$ & $\Cross 10$ & $0.01$ & $0.01$ \\ \hline
@@ -262,19 +262,19 @@ conoce la cantidad de valores anteriores de la serie respecto a los cuales $f$ e
             \label{tabla_configuracion}
         \end{table}
 
-        Con este analisis encontramos que los valores utilizados como parámetros
+        Con este análisis se encontró que los valores utilizados como parámetros
         en la sección \ref{sec:comparacion-activacion} resultaron muy cercanos a
         los óptimos.
-        El unico parámetro con valor distinto es $a$ con un valor de $0.001$.
+        El único parámetro con valor distinto es $a$ con un valor de $0.001$.
 
     \subsection{Estrategia de Rollback}
 
-        Respecto a \ref{less_rollbacks}, la disminución de la cantidad de entrenamientos descartados, se puede ver que la estrategia de hacer rollback si el percentil 90 no disminuye consigue mejores resultados que la estrategia convencional y la estrategia de hacer rollback sólo si no disminuye la media y el percentil. Esto se puede ver en \ref{tabla_rollbacks}, donde este criterio mejora en un $25\%$.
+        Respecto a la sección \ref{less_rollbacks}, la disminución de la cantidad de entrenamientos descartados, se puede ver que la estrategia de hacer rollback si el percentil 90 no disminuye consigue mejores resultados que la estrategia convencional y la estrategia de hacer rollback sólo si no disminuye la media y el percentil. Esto se puede ver en el cuadro \ref{tabla_rollbacks}, donde este criterio mejora en un $25\%$.
 
     \begin{table}[H]
         \begin{tabular}{|c|c|c|c|c|}
         \hline
-        Criterio & Rollbacks & $\overline{e_m}$ & $\overline{\sigma^2}$ & ${e_m}_{max} $ \\ \hline
+        Criterio & Rollbacks & $\overline{e}$ & $\overline{\sigma^2}$ & ${e}_{max} $ \\ \hline
         Solo la media & $507.5$ & $0.08498$ & $0.14161$ & $0.5671$ \\ \hline
         And & $476.6$ & $0.06458$ & $0.11795$ & $0.55802$ \\ \hline
         Or & $495.4$ & $0.09988$ & $0.17392$ & $0.76038$ \\ \hline
@@ -283,7 +283,7 @@ conoce la cantidad de valores anteriores de la serie respecto a los cuales $f$ e
         \label{tabla_rollbacks}
     \end{table}
 
-    \subsection{Optimizarión de arquitectura}
+    \subsection{Optimización de arquitectura}
     \label{sec:arquitectura-optima}
 
     Una vez conocidos los parámetros óptimos, se buscó optimizar la arquitectura utilizando estos valores.
@@ -302,9 +302,10 @@ conoce la cantidad de valores anteriores de la serie respecto a los cuales $f$ e
         \label{fig:arquitecturas}
     \end{figure}
 
-    De esta ejecucion pudimos obtener nuestra mejor red.
+    De esta ejecución se pudo obtener nuestra mejor red.
     Es la de arquitectura de 2 entradas, 9 neuronas en la primer capa oculta y 8 en la segunda capa oculta.
-    Para esta red obtuvimos como error medio $0.01605$, una desviacion standard del error de $0.025738$ y un error maximo de $0.11786$.
+
+    Para esta red se obtuvo como error medio $0.01605$, una desviación standard del error de $0.025738$ y un error máximo de $0.11786$.
     Se puede comparar este resultado con el resto de las arquitecturas en la tabla \ref{tab:arquitectura_full} en el anexo.
 
 \include{figures}
