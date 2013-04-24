@@ -94,7 +94,7 @@
 
 El problema consiste en la implementación de una red neuronal multicapa con aprendizaje supervisado que realice la predicción de series temporales. Para ello se supone que $x(t)$ (el valor de la 
 serie en el paso temporal $t$) es alguna función desconocida de los valores de la serie en pasos anteriores, es decir, $x(t) = f (x(t - 1), x(t - 2), x(t - 3), \dots)$. 
-La red neuronal deberá poder aproximar a la función $f$ desconocida. A priori no se conoce cuantos pasos temporales previos hay que considerar como argumento 
+La red neuronal deberá poder aproximar a la función $f$ desconocida. Inicialmente no se conoce cuantos pasos temporales previos hay que considerar como argumento 
 de la función $f$. Se utilizaron siempre menos de cuatro.
 
 \section{Implementación}
@@ -131,35 +131,12 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
                 Para la salida: \[ o_{i} = (x - 0.5) * 8 \]
         \end{itemize}
 
-        Se puede ver fácilmente que la función para normalizar una entrada es la inversa de la función que normaliza la salida.
-
-    \subsection{Disminución de la cantidad de entrenamientos descartados}
-
-        %TODO: Esto no deberia ir despues de las mejoras? O al menos despues de mencionar eta adaptativo?
-        \label{less_rollbacks}
-        Se consideró incorporar otros criterios para deshacer entrenamientos utilizando la estrategia de entrenamiento adaptativo. Además de considerar el error cuadrático medio, 
-        se consideró como un valor relevante el de un percentil alto (se seleccionó el percentil $90$) de los errores del conjunto de entrenamiento. El objetivo es no descartar 
-        entrenamientos que son mejores, aunque el error medio no disminuya. Dos nuevos criterios utilizando este nuevo parámetro son:
-
-        \begin{itemize}
-            \item Se hace rollback si disminuye el error cuadrático medio \textbf{y} disminuye el percentil 90.
-            \item Se hace rollback si disminuye el error cuadrático medio \textbf{o} disminuye el percentil 90.
-        \end{itemize}
-
-    \subsection{Selección de los parámetros de configuración}
-
-        \label{sec:configuracion}
-        El entrenamiento de la red neuronal con las estrategias implementadas tiene una extensa variedad de parámetros de configuración. Además de $\eta$, 
-        el coeficiente de aprendizaje, el entrenamiento con la estrategia \textit{Momentum} requiere seleccionar un valor para $\alpha$, el término que pesa el descenso promedio. 
-        La estrategia de entrenamiento adaptativo requiere la selección de más parámetros: los factores $a$, $b$, y la cantidad de pasos $k$.
-        Se determinaron valores iniciales que producían resultados suficientemente satisfactorios en 1500 iteraciones . Se consideró cada parámetro independientemente de 
-        los demás y se iteró por valores relevantes para cada variable.
 
     \subsection{Mejoras}
 
         \subsubsection{Momentum}
 
-        Momentum considera los valores de $\delta w_{ij}$ de pasos anteriores a la hora de actualizar los pesos del paso actual.
+        Momentum considera los valores de $\Delta w_{ij}$ de pasos anteriores a la hora de actualizar los pesos del paso actual.
         En particular, se agrega al cambio dado por \texttt{Back Propagation}, el cambio de la iteración anterior pesado por un factor $\alpha$.
 
         \subsubsection{$\eta$ adaptativo}
@@ -182,19 +159,39 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
     Para el entrenamiento de la red se usó los primeros 800 puntos, y los restantes 200 puntos se usaron como conjunto de prueba.
     Siempre que se habla del error medio de una red, se refiere al error sobre el conjunto de prueba.
 
+    \subsection{Disminución de la cantidad de entrenamientos descartados}
+        \label{less_rollbacks}
+        Se consideró incorporar otros criterios para deshacer entrenamientos utilizando la estrategia de entrenamiento adaptativo. Además de considerar el error cuadrático medio, 
+        se consideró como un valor relevante el de un percentil alto (se seleccionó el percentil $90$) de los errores del conjunto de entrenamiento. El objetivo es no descartar 
+        entrenamientos que son mejores, aunque el error medio no disminuya. Dos nuevos criterios utilizando este nuevo parámetro son:
+
+        \begin{itemize}
+            \item Se hace rollback si disminuye el error cuadrático medio \textbf{y} disminuye el percentil 90.
+            \item Se hace rollback si disminuye el error cuadrático medio \textbf{o} disminuye el percentil 90.
+        \end{itemize}
+
+    \subsection{Selección de los parámetros de configuración}
+
+        \label{sec:configuracion}
+        El entrenamiento de la red neuronal con las estrategias implementadas tiene una extensa variedad de parámetros de configuración. Además de $\eta$, 
+        el coeficiente de aprendizaje, el entrenamiento con la estrategia \textit{Momentum} requiere seleccionar un valor para $\alpha$, el término que pesa el descenso promedio. 
+        La estrategia de entrenamiento adaptativo requiere la selección de más parámetros: los factores $a$, $b$, y la cantidad de pasos $k$.
+        Se determinaron valores iniciales que producían resultados suficientemente satisfactorios en 1500 iteraciones . Se consideró cada parámetro independientemente de 
+        los demás y se iteró por valores relevantes para cada variable.
+
 \section{Resultados y Conclusiones}
 
     \subsection{Comparación de Funciones de Activación}
     \label{sec:comparacion-activacion}
 
-    Para realizar una comparación entre las funciones de activación utilizadas, se definió un set de arquitecturas de prueba. Para esta comparacion, se mantuvieron fijos los parámetros de entrada de la red y se limito la cantidad de iteraciones a 1500.
+    Para realizar una comparación entre las funciones de activación utilizadas, se definió un set de arquitecturas de prueba de manera arbitraria.
+    Para esta comparacion, se mantuvieron fijos los parámetros de entrada de la red y se limito la cantidad de iteraciones a 1500.
     Cabe destacar que, según la función de activación usada en cada caso, se debieron acotar los valores aleatorios de los pesos utilizados como entrada al algoritmo de aprendizaje
     supervisado. Como era de esperarse, para la función sigmoidea, hubo que generar números muy pequeños en módulo (cercanos a 0), para que no se saturen las conexiones, y se impida el aprendizaje.
     Para el caso de la tangente hiperbólica, en cambio, esos pesos  iniciales pequeños no retornaron resultados positivos, como si lo hicieron las pruebas realizadas con valores 
     aleatorios pero con cotas mayores.
 
      \begin{table}[H]
-        \label{table-comparation-act-functions}
 
         \begin{center}
         \begin{tabular}{|l|r|r|}
@@ -214,6 +211,7 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         \end{tabular}
         \end{center}
         \caption{Comparación del error cuadrático medio entre las funciones de activación \textit{Tangente hiperbólica} y \textit{Sigmoidea}.}
+        \label{table-comparation-act-functions}
 
     \end{table}
 
@@ -223,7 +221,7 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
     \subsection{Optimizacion de parametros}
     \label{sec:parametros-optimos}
 
-        Se muestran los resultados obtenidos de la seleccion despcripta en la seccion \ref{sec:configuracion} para cada variable en la \ref{tabla_configuracion}. 
+        Se muestran los resultados obtenidos de la seleccion despcripta en la seccion \ref{sec:configuracion} para cada variable en la tabla \ref{tabla_configuracion}. 
         Al respecto, se hacen las siguientes observaciones:
 
         \begin{itemize}
@@ -249,12 +247,28 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         Con este analisis encontramos que los valores utilizados como parametros en la seccion \ref{sec:comparacion-activacion} resultaron muy cercanos a los optimos.
         El unico parametro con valor distinto es $a$ con un valor de $0.001$.
 
+    \subsection{Estrategia de Rollback}
+
+        Respecto a \ref{less_rollbacks}, la disminución de la cantidad de entrenamientos descartados, se puede ver que la estrategia de hacer rollback si el percentil 90 no disminuye consigue mejores resultados que la estrategia convencional y la estrategia de hacer rollback sólo si no disminuye la media y el percentil. Esto se puede ver en \ref{tabla_rollbacks}, donde este criterio mejora en un $25\%$.
+
+    \begin{table}[H]
+        \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Criterio & Rollbacks & $\overline{e_m}$ & $\overline{\sigma^2}$ & ${e_m}_{max} $ \\ \hline
+        Solo la media & $507.5$ & $0.08498$ & $0.14161$ & $0.5671$ \\ \hline
+        And & $476.6$ & $0.06458$ & $0.11795$ & $0.55802$ \\ \hline
+        Or & $495.4$ & $0.09988$ & $0.17392$ & $0.76038$ \\ \hline
+        \end{tabular}
+        \caption{Criterio para descartar entrenamientos. Promedios obtenidos luego de 800 entrenamientos, sobre un conjunto de diez ejecuciones.}
+        \label{tabla_rollbacks}
+    \end{table}
+
     \subsection{Optimizacion de arquitectura}
     \label{sec:arquitectura-optima}
 
     Una vez conocidos los parametros optimos, buscamos optimizar la arquitectura utilizando estos valores.
     Para esto se corrieron repetidas ejecuciones de un abanico de arquitecturas de 2 entradas.
-    No se utilizaron arquitecturas de 3 entradas ya que en la tabla \label{table-comparation-act-functions} se observo que las redes de 3 entradas no presentan mejoras sustanciales sobre las de 2.
+    No se utilizaron arquitecturas de 3 entradas ya que en la tabla \ref{table-comparation-act-functions} se observo que las redes de 3 entradas no presentan mejoras sustanciales sobre las de 2.
 
     Las arquitecturas que se consideraron tienen 2 capas ocultas.
     La siguiente figura muestra los menores errores obtenidos en estas ejecuciones para cada arquitectura.
@@ -266,7 +280,9 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         \label{fig:arquitecturas}
     \end{figure}
 
-    % FILL ME IN
+    De esta ejecucion pudimos obtener nuestra mejor red.
+    Es la de arquitectura de 2 entradas, 9 neuronas en la primer capa oculta y 8 en la segunda capa oculta.
+    Para esta red obtuvimos como error medio $0.01605$, una desviacion standard del error de $0.025738$ y un error maximo de $0.11786$.
 
 \include{figures}
 
