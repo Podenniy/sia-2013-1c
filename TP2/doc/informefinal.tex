@@ -182,14 +182,13 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
 \section{Resultados}
 
     \subsection{Comparación de Funciones de Activación}
+    \label{sec:comparacion-activacion}
 
-    Para realizar una comparación entre las funciones de activación utilizadas, se definió un set de arquitecturas, y se mantuvieron fijos los parámetros de entrada de la red, 
-    utilizando los mejores valores hallados para cada uno en la sección anterior. Dichas arquitecturas fueron escogidas de entre otras varias, por los resultados presentados por ellas.
-
+    Para realizar una comparación entre las funciones de activación utilizadas, se definió un set de arquitecturas de prueba. Se mantuvieron fijos los parámetros de entrada de la red.
     Cabe destacar que, según la función de activación usada en cada caso, se debieron acotar los valores aleatorios de los pesos utilizados como entrada al algoritmo de aprendizaje
     supervisado. Como era de esperarse, para la función sigmoidea, hubo que generar números muy pequeños en módulo (cercanos a 0), para que no se saturen las conexiones, y se impida el aprendizaje.
     Para el caso de la tangente hiperbólica, en cambio, esos pesos  iniciales pequeños no retornaron resultados positivos, como si lo hicieron las pruebas realizadas con valores 
-    aleatorios pero con cotas mayores (módulo cercano a 1).
+    aleatorios pero con cotas mayores.
 
      \begin{table}[H]
         \label{table-comparation-act-functions}
@@ -199,29 +198,28 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
             \hline
             Arquitectura \textbackslash Función de activación & Tangente hiperbólica & Sigmoidea \\
             \hline
-            [2 5 4 1] & error1 & error2 \\
+            [2 5 4 1] & $0.023053$ & $0.31491$ \\
             \hline
-            [3 10 6 1] & error3 & error4  \\
+            [3 10 6 1] & $0.053163$ & $0.30446$  \\
             \hline
-            [2 10 6 1] & error5 & error6  \\
+            [2 10 6 1] & $0.029276$ & $0.31163$  \\
             \hline
-            [2 4 2 1]  & error7 & error8  \\
+            [2 4 2 1]  & $0.36896$ & $0.31504$  \\
             \hline
-            [3 14 8 1] & error9 & error10  \\
+            [3 14 8 1] & $0.028585$ & $0.30841$  \\
             \hline
         \end{tabular}
         \end{center}
         \caption{Comparación del error cuadrático medio entre las funciones de activación \textit{Tangente hiperbólica} y \textit{Sigmoidea}.}
 
-        %% TODO: reflejar en palabras lo que diga la tabla
-
     \end{table}
 
-    \subsection{MISSING SUBSECTION NAME}
-        Respecto a \ref{less_rollbacks}, la disminución de la cantidad de entrenamientos descartados, se puede ver que la estrategia de no hacer rollback 
-        si el percentil 90 disminuye a pesar de que aumente el error cuadrático medio disminuye la cantidad de \textit{rollbacks} sin comprometer el resultado.
+    Se observa que las redes obtenidas con la funcion $tanh$ son ampliamente superiores a sus contrapartes con la funcion \textit{Sigmoidea}.
+    A partir de este resultado, optamos por concentrar nuestra atencion en redes construidas con la funcion \textit{Tangente hiperbolica}.
 
-        Respecto a \ref{configuracion}, la selección de los parámetros de configuración, se muestran los resultados obtenidos para cada variable en la \ref{tabla_configuracion}. 
+    \subsection{Optimizacion de parametros}
+
+        Se realizo un analisis de los valores de los parametros de ejecucion. Se muestran los resultados obtenidos para cada variable en la \ref{tabla_configuracion}. 
         Al respecto, se hacen las siguientes observaciones:
 
         \begin{itemize}
@@ -243,6 +241,9 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
             \caption{Parámetros de configuración de la red neuronal}
             \label{tabla_configuracion}
         \end{table}
+
+        Con este analisis encontramos que los valores utilizados como parametros en la seccion \ref{sec:comparacion-activacion} resultaron muy cercanos a los optimos.
+        El unico parametro con valor distinto es $a$ con un valro de $0.001$.
 
 
 \section{Conclusiones}
