@@ -157,10 +157,48 @@ Para el entrenamiento de la red se uso los primeros 800 puntos, y los restantes 
 
 \section{Resultados}
 
+    \subsection{Comparación de Funciones de Activación}
+
+    Para realizar una comparación entre las funciones de activación utilizadas, se definió un set de arquitecturas, y se mantuvieron fijos los parámetros de entrada de la red, 
+    utilizando los mejores valores hallados para cada uno en la sección anterior. Dichas arquitecturas fueron escogidas de entre otras varias, por los resultados presentados por ellas.
+
+    Cabe destacar que, según la función de activación usada en cada caso, se debieron acotar los valores aleatorios de los pesos utilizados como entrada al algoritmo de aprendizaje
+    supervisado. Como era de esperarse, para la función sigmoidea, hubo que generar números muy pequeños en módulo (cercanos a 0), para que no se saturen las conexiones, y se impida el aprendizaje.
+    Para el caso de la tangente hiperbólica, en cambio, esos pesos  iniciales pequeños no retornaron resultados positivos, como si lo hicieron las pruebas realizadas con valores 
+    aleatorios pero con cotas mayores (módulo cercano a 1).
+
+     \begin{table}[H]
+        \label{table-comparation-act-functions}
+
+        \begin{center}
+        \begin{tabular}{|l|r|r|}
+            \hline
+            Arquitectura \textbackslash Función de activación & Tangente hiperbólica & Sigmoidea \\
+            \hline
+            [2 5 4 1] & error1 & error2 \\
+            \hline
+            [3 10 6 1] & error3 & error4  \\
+            \hline
+            [2 10 6 1] & error5 & error6  \\
+            \hline
+            [2 4 2 1]  & error7 & error8  \\
+            \hline
+            [3 14 8 1] & error9 & error10  \\
+            \hline
+        \end{tabular}
+        \end{center}
+        \caption{Comparación del error cuadrático medio entre las funciones de activación \textit{Tangente hiperbólica} y \textit{Sigmoidea}.}
+
+        %% TODO: reflejar en palabras lo que diga la tabla
+
+    \end{table}
+
 \section{Conclusiones}
 
 % Resumir analisis
 % Comparar las "mejores" redes, vease output_3, output_5, y magico de tebez. y decir por que nos parece mejor _3
+
+% Dar una conclusión acerca de las funciones de activación.
 
 \include{figures}
 
