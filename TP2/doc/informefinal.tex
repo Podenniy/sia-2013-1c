@@ -179,12 +179,12 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
     Se tiene un conjunto de 1000 puntos de la serie a ser generalizada.
     Para el entrenamiento de la red se usó los primeros 800 puntos, y los restantes 200 puntos se usaron como conjunto de prueba.
 
-\section{Resultados}
+\section{Resultados y Conclusiones}
 
     \subsection{Comparación de Funciones de Activación}
     \label{sec:comparacion-activacion}
 
-    Para realizar una comparación entre las funciones de activación utilizadas, se definió un set de arquitecturas de prueba. Se mantuvieron fijos los parámetros de entrada de la red.
+    Para realizar una comparación entre las funciones de activación utilizadas, se definió un set de arquitecturas de prueba. Para esta comparacion, se mantuvieron fijos los parámetros de entrada de la red y se limito la cantidad de iteraciones a 1500.
     Cabe destacar que, según la función de activación usada en cada caso, se debieron acotar los valores aleatorios de los pesos utilizados como entrada al algoritmo de aprendizaje
     supervisado. Como era de esperarse, para la función sigmoidea, hubo que generar números muy pequeños en módulo (cercanos a 0), para que no se saturen las conexiones, y se impida el aprendizaje.
     Para el caso de la tangente hiperbólica, en cambio, esos pesos  iniciales pequeños no retornaron resultados positivos, como si lo hicieron las pruebas realizadas con valores 
@@ -244,19 +244,12 @@ de la función $f$. Se utilizaron siempre menos de cuatro.
         \end{table}
 
         Con este analisis encontramos que los valores utilizados como parametros en la seccion \ref{sec:comparacion-activacion} resultaron muy cercanos a los optimos.
-        El unico parametro con valor distinto es $a$ con un valro de $0.001$.
+        El unico parametro con valor distinto es $a$ con un valor de $0.001$.
 
     \subsection{Optimizacion de arquitectura}
-    \lable{sec:arquitectura-optima}
+    \label{sec:arquitectura-optima}
 
     % FILL ME IN
-
-\section{Conclusiones}
-
-% Resumir analisis
-% Comparar las "mejores" redes, vease output_3, output_5, y magico de tebez. y decir por que nos parece mejor _3
-
-% Dar una conclusión acerca de las funciones de activación.
 
 \include{figures}
 
