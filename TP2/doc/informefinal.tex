@@ -95,7 +95,36 @@ serie en el paso temporal $t$) es alguna función desconocida de los valores de 
 La red neuronal deberá poder aproximar a la función $f$ desconocida. A priori no se conoce cuantos pasos temporales previos hay que considerar como argumento 
 de la función $f$. Se utilizaron siempre menos de cuatro.
 
-\section{Implementacion}
+\section{Implementación}
+
+    \subsection{Funciones de activación}
+    Se utilizaron las siguientes funciones de activación, y sus respectivas derivadas:
+
+    \begin{itemize}
+        \item Función Sigmoidea
+            \[ g(x) = \dfrac{1}{1 + exp^{-x}} \]
+            \[ g'(x) = g(x)[1 - g(x)]\]
+        \item Tangente hiperbólica
+            \[ g(x) = tanh(x) \]
+            \[ g'(x) = sech(x)^{2} \]
+    \end{itemize}
+
+    \subsection{Normalización de la entrada y la salida}
+
+        Dado que las entradas y salidades de la red pertenecen al intervalo $(-4, 4)$, y las entradas y las salidas de las funciones de activación utilizadas 
+        pertenecen al intervalo $(0,1)$ para el caso de la sigmoidea, y al $(-1,1)$ en el caso de la tangente hiperbólica, se debe realizar una normalización 
+        tanto en la entrada como en la salida de la red. Estas normalizaciones son las siguentes:
+
+        \begin{itemize}
+            \item Sigmoidea
+                Para la entrada: \[ \xi_{i} = (x_{i} + 4) / 8 \]
+                Para la salida: \[ o_{i} = x_{i} * 4 \]
+            \item Tangente hiperbólica
+                Para la entrada: \[ \xi_{i} = x / 4 \]
+                Para la salida: \[ o_{i} = (x - 0.5) * 8 \]
+        \end{itemize}
+
+        Se puede ver fácilmente que la función para normalizar una entrada es la inversa de la función que normaliza la salida.
 
 Se implemento una red multicapa del tipo \texttt{Feed Forward}, usando el algoritmo \texttt{Back Propagation} para el entrenamiento. La distribucion inicial de pesos se genero de manera aleatoria con valores acotados a un intervalo dependiente de la funcion de activacion en uso. Como medida del error se uso la funcion de error cuadratico.
 
@@ -116,6 +145,7 @@ Una vez que se encuentra un paso que disminuye el error se reactive \texttt{Mome
 \section{Resultados}
 
 \section{Conclusiones}
+
 
 \include{figures}
 
