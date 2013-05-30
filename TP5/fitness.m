@@ -1,6 +1,7 @@
-function t = fitness(W)
+function t = fitness(ind)
   global test_set test_results;
   
+  W = ind.W;
   y = zeros(size(test_set, 2), 1);
   for i=1:size(test_set, 2)
      z = run_neural_network(W, test_set(:,i), @tanh);

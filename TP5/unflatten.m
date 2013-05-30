@@ -1,18 +1,15 @@
-function t = unflatten(structure, allels)
-  
-  t = struct();
-  
-  t.allels = allels;
-  t.structure = structure;
-  
-  t.W = struct();
+function t = unflatten(t)
+
+  lvl = get_lvls(t.W);
+  levels = size(lvl, 1)-1;
+
   i = 1;
-  for level=1:size(levels,2)-1
-    level_len = t.structure(level);
-    t.W.(char('@' + level)) = allels(i:i+level_len-1);
+  for level=1:levels
+    level_len = t.inner_structure(level);
+    cols = t.structure(level)+1;
+    rows = level_len / cols;
+    t.W.(char('@' + level)) = reshape(...
+      t.allels(i:i+level_len-1), rows, cols);
     i = i + level_len;
   end
-  
-  t.fitness = fitness(t.W);
-  
 end
