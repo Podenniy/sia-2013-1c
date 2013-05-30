@@ -1,6 +1,5 @@
 function data = execute_learn_algorithm(W, matrix_topology, g, gp, window_size, params)
 
-
   load('TimeSerie_G1.mat');
   x = x ./ 4;
   dataset = zeros(window_size, 800);
