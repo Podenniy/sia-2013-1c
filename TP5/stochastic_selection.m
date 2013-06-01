@@ -7,7 +7,7 @@ function t=stochastic_selection(individuals, M)
   chances = zeros(N, 1);
   cumm = 0;
   for i=1:N
-    cumm = cumm + individuals(i).f;
+    cumm = cumm + individuals(i).i.f;
     chances(i) = cumm;
   end
   for i=1:N

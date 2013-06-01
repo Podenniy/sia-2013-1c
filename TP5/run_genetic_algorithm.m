@@ -38,10 +38,6 @@ function data = run_genetic_algorithm(params)
 
   while ~done(prev, status)
     
-    if debug
-      display(['Generation ' num2str(status.g)]);
-    end
-    
     data(status.g).d = struct(...
       'g', status.g, ...
       'f_avg', status.f_avg, ...
@@ -52,6 +48,16 @@ function data = run_genetic_algorithm(params)
       'b', status.b, ...
       'std', status.std ...
     );
+    if debug
+      display(['Generation ' num2str(status.g)]);
+      display(['  avg: ' num2str(status.f_avg)]);
+      display(['  90th: ' num2str(status.f_90th)]);
+      display(['  max: ' num2str(status.f_max)]);
+      display(['  std: ' num2str(status.std)]);
+      plotresults(data);
+      drawnow;
+    end
+    
     prev = status;
     status = replace_algorithm(status, params);
     status = evaluate_population(status);
