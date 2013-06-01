@@ -28,10 +28,10 @@ function data = run_genetic_algorithm(params)
       'N', params.N, ...
       'g', 1 ...
     );
-    status = evaluate_population(status);
   else
     status = get_random_population(N);
   end
+  status = evaluate_population(status);
   
   data = [];   % Will contain .g fields with data about generations
   prev = 0;
@@ -54,6 +54,7 @@ function data = run_genetic_algorithm(params)
     );
     prev = status;
     status = replace_algorithm(status, params);
+    status = evaluate_population(status);
   end
 
 end
