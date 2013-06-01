@@ -8,7 +8,7 @@ function t=rank(individuals, M)
   
   ranks = zeros(N, 2);
   for i=1:N
-    ranks(i,:) = [individuals(i).fitness, i];
+    ranks(i,:) = [individuals(i).f, i];
   end
   ranks = sortrows(ranks);
   
@@ -40,7 +40,7 @@ function t=rank(individuals, M)
         selected = 1;
       end
     end
-    t(i).i = individuals(selected);
+    t(i).i = individuals(selected).i;
     r = r + k;
     if r > 1
       r = r - 1;

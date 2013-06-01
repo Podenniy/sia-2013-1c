@@ -6,7 +6,7 @@ function t=roulette(individuals, M)
   chances = zeros(N, 1);
   cumm = 0;
   for i=1:N
-    cumm = cumm + individuals(i).fitness;
+    cumm = cumm + individuals(i).f;
     chances(i) = cumm;
   end
   for i=1:N
@@ -22,6 +22,6 @@ function t=roulette(individuals, M)
         selected = j;
       end
     end
-    t(i).i = individuals(selected);
+    t(i).i = individuals(selected).i;
   end
 end

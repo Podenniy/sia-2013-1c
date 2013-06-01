@@ -9,20 +9,20 @@ function t=tournament(individuals, M, chance)
     while y == x
       y = randi([1, N]);
     end
-    fx = individuals(x).fitness;
-    fy = individuals(y).fitness;
+    fx = individuals(x).f;
+    fy = individuals(y).f;
     r = rand();
     if r < chance
       if fy > fx
-        t(i).i = individuals(y);
+        t(i).i = individuals(y).i;
       else
-        t(i).i = individuals(x);
+        t(i).i = individuals(x).i;
       end
     else
       if fy > fx
-        t(i).i = individuals(x);
+        t(i).i = individuals(x).i;
       else
-        t(i).i = individuals(y);
+        t(i).i = individuals(y).i;
       end
   end
 end

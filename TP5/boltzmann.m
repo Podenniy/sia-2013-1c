@@ -7,7 +7,7 @@ function t=boltzmann(individuals, M, T)
   chances = zeros(N, 1);
   cumm = 0;
   for i=1:N
-    cumm = cumm + exp(individuals(i).fitness/T);
+    cumm = cumm + exp(individuals(i).f/T);
     chances(i) = cumm;
   end
   for i=1:N
@@ -28,7 +28,7 @@ function t=boltzmann(individuals, M, T)
         selected = 1;
       end
     end
-    t(i).i = individuals(selected);
+    t(i).i = individuals(selected).i;
     r = r + k;
     if r > 1
       r = r - 1;

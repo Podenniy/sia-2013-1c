@@ -26,17 +26,21 @@ function data=learn(dataset, expected, W, g, gp, parameters)
   adaptative_steps = param('adaptative_steps', 3);
   % Print debug data
   debug = param('debug', false);
+  % Training set size
+  training_set_size = param('training_set_size', size(dataset, 2));
+
   lvl = get_lvls(W);
   
   tic;
   
   adaptative_epsilon = 0.00001;
+  dataset_size = size(dataset, 2);
 
   levels = size(lvl, 1)-1;
   iter = 1;
   tries = 0;
 
-  error = zeros(size(dataset, 2), 1);
+  error = zeros(dataset_size, 1);
   mean_errors = zeros(hard_limit,1);
   ninetile_errors = zeros(hard_limit,1);
   ETA = zeros(hard_limit,1);
@@ -55,10 +59,11 @@ function data=learn(dataset, expected, W, g, gp, parameters)
     
     ETA(tries) = eta;
     if randomize_dataset
-      idxs = randperm(size(dataset, 2));
+      idxs = randperm(dataset_size);
     else
-      idxs = 1:size(dataset, 2);
+      idxs = 1:dataset_size;
     end
+    idxs = idxs(1:training_set_size);
     this_dataset = dataset(:,idxs);
     this_expected = expected(idxs);
 
@@ -69,7 +74,7 @@ function data=learn(dataset, expected, W, g, gp, parameters)
       previous_changes.(name) = zeros(size(W.(name)));
     end
     last_weights = W;
-    for i=1:size(this_dataset, 2)
+    for i=1:training_set_size
 
       E = this_dataset(:,i);
       S = this_expected(i);

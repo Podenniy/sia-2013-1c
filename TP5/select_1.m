@@ -1,7 +1,10 @@
-function new_pop = select_1(population, selection_algorithm, ...
-                      cross_algorithm, mutate_algorithm)
+function new_pop = select_1(population, ...
+                      selection_algorithm, ...
+                      unused_selection_algorithm_2, ...
+                      cross_algorithm, ...
+                      mutate_algorithm)
                     
-  N = size(population, 1);
+  N = size(population, 2);
   new_pop = struct();
   for i=1:N/2
     parents = selection_algorithm(population, 2);
@@ -13,9 +16,6 @@ function new_pop = select_1(population, selection_algorithm, ...
     
     n1 = backpropagate_individual(n1);
     n2 = backpropagate_individual(n2);
-    
-    n1.fitness = fitness(n1);
-    n2.fitness = fitness(n2);
     
     new_pop(i*2).i = n1;
     new_pop(i*2+1).i = n2;

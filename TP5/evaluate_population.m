@@ -9,6 +9,7 @@ function state = evaluate_population(state)
   state.f_90th = prctile(fitnesses, 90);
   state.f_95th = prctile(fitnesses, 95);
   state.f_min = min(fitnesses);
-  state.f_max = max(fitnesses);
+  [state.f_max, index] = max(fitnesses);
+  state.b = state.p(index).i;
   state.std = std(fitnesses);
 end
