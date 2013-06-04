@@ -4,7 +4,7 @@ function t=universal_mutate(t, pm, cap)
   
   for i=1:N
     if rand() < pm
-      t.allels(i) = rand*cap*2-0.5; 
+      t.allels(i) = rand()*cap*2-0.5; 
     end
   end
   t = unflatten(t);  

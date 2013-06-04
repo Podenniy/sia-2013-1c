@@ -1,4 +1,4 @@
-function t=rank(individuals, M)
+function t=rank(individuals, M, unused_status)
 
   N = size(individuals, 2);
   t = [];

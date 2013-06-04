@@ -1,4 +1,4 @@
-function u, v = anular(i1, i2, L)
+function [u, v] = anular(i1, i2, L)
   
   N = size(i1.allels, 2);
   i = sort([randi([1,N]), randi([1,N])]);

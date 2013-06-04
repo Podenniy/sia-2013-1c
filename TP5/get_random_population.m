@@ -11,6 +11,4 @@ function t = get_random_population(N)
   end
   
   t = struct('p', t, 'N', N, 'g', 1);
-  t = evaluate_population(t);
-  
 end

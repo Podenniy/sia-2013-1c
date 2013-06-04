@@ -1,4 +1,4 @@
-function t=elite(individuals, M)
+function t=elite(individuals, M, unused_state)
 
   N = size(individuals, 2);
   t = [];

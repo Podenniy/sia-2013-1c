@@ -1,4 +1,4 @@
-function t=roulette(individuals, M)
+function t=roulette(individuals, M, unused_status)
 
   N = size(individuals, 2);
   t = [];
