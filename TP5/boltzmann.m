@@ -7,7 +7,7 @@ function t=boltzmann(individuals, M, T)
   chances = zeros(N, 1);
   cumm = 0;
   for i=1:N
-    cumm = cumm + exp(individuals(i).f/T);
+    cumm = cumm + exp(individuals(i).i.f/T);
     chances(i) = cumm;
   end
   for i=1:N

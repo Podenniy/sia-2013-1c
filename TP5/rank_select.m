@@ -1,4 +1,4 @@
-function t=rank(individuals, M, unused_status)
+function t=rank_select(individuals, M, unused_status)
 
   N = size(individuals, 2);
   t = [];
@@ -8,7 +8,7 @@ function t=rank(individuals, M, unused_status)
   
   ranks = zeros(N, 2);
   for i=1:N
-    ranks(i,:) = [individuals(i).f, i];
+    ranks(i,:) = [individuals(i).i.f, i];
   end
   ranks = sortrows(ranks);
   

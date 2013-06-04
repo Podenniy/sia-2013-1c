@@ -9,8 +9,8 @@ function t=tournament(individuals, M, chance)
     while y == x
       y = randi([1, N]);
     end
-    fx = individuals(x).f;
-    fy = individuals(y).f;
+    fx = individuals(x).i.f;
+    fy = individuals(y).i.f;
     r = rand();
     if r < chance
       if fy > fx

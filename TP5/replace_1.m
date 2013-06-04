@@ -2,11 +2,11 @@ function new_pop = replace_1(population, ...
                       selection_algorithm, ...
                       selection_algorithm_2, ...
                       cross_algorithm, ...
-                      mutate_algorithm, params)
+                      mutate_algorithm, status, params)
                     
   N = size(population, 2);
   new_pop = struct();
-  parents = selection_algorithm(population, N);
+  parents = selection_algorithm(population, N, status);
   for i=1:N/2
     prnts = parents(i*2-1:i*2);
     

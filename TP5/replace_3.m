@@ -2,7 +2,7 @@ function new_pop = replace_3(population, ...
                       selection_algorithm, ...
                       selection_algorithm_2, ...
                       cross_algorithm, ...
-                      mutate_algorithm, params)
+                      mutate_algorithm, status, params)
                     
   % REQUIRES PARAMS TO HAVE A 'G' DEFINED, the fraction of individuals that
   % will not perish
@@ -14,7 +14,7 @@ function new_pop = replace_3(population, ...
   end
 
   newindividuals = struct();
-  parents = selection_algorithm(population, K);
+  parents = selection_algorithm(population, K, status);
   for i=1:K/2
     prnts = parents(i*2-1:i*2);
     
@@ -39,5 +39,5 @@ function new_pop = replace_3(population, ...
     all_ind(i+N).i = newindividuals(i).i;
   end
   
-  new_pop = selection_algorithm_2(all_ind, N);
+  new_pop = selection_algorithm_2(all_ind, N, status);
 end

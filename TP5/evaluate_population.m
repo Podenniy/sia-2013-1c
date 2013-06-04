@@ -1,7 +1,7 @@
 function state = evaluate_population(state)
 
   fitnesses = zeros(state.N, 1);
-  for i=1:state.N
+  for i=1:(state.N)
     fitnesses(i) = state.p(i).i.f;
   end
   
