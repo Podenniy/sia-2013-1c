@@ -4,7 +4,8 @@ function data = run_genetic_algorithm(params)
 
   replace_algorithm = param('replace_algorithm', 0);
   done = param('done', 0);
-  debug = param('debug', true);
+  debug = param('debug', false);
+  plotdebug = param('plotdebug', false);
   N = param('N', 100);
 
   setup_neuronal_network_data();
@@ -36,8 +37,8 @@ function data = run_genetic_algorithm(params)
   data = [];   % Will contain .g fields with data about generations
   prev = 0;
 
-  while ~done(prev, status)
 
+  while ~done(prev, status)
     data(status.g).d = struct(...
       'g', status.g, ...
       'f_avg', status.f_avg, ...
@@ -45,7 +46,6 @@ function data = run_genetic_algorithm(params)
       'f_95th', status.f_95th, ...
       'f_min', status.f_min, ...
       'f_max', status.f_max, ...
-      'b', status.b, ...
       'std', status.std ...
     );
     if debug
@@ -54,8 +54,10 @@ function data = run_genetic_algorithm(params)
       display(['  90th: ' num2str(status.f_90th)]);
       display(['  max: ' num2str(status.f_max)]);
       display(['  std: ' num2str(status.std)]);
-      plotresults(data);
-      drawnow;
+      if plotdebug
+        plotresults(data);
+        drawnow;
+      end
     end
 
     if mod(status.g, params.mutate_cycle) == 0
@@ -66,5 +68,16 @@ function data = run_genetic_algorithm(params)
     status = replace_algorithm(status, params);
     status = evaluate_population(status);
   end
+
+  data(status.g).d = struct(...
+    'g', status.g, ...
+    'f_avg', status.f_avg, ...
+    'f_90th', status.f_90th, ...
+    'f_95th', status.f_95th, ...
+    'f_min', status.f_min, ...
+    'f_max', status.f_max, ...
+    'std', status.std, ...
+    'best', status.b ...
+  );
 
 end
