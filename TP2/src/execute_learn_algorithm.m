@@ -2,7 +2,7 @@ function data = execute_learn_algorithm(W, matrix_topology, g, gp, window_size, 
 
 
   load('TimeSerie_G1.mat');
-  x = x ./ 4;
+  x = (x + 4) ./ 8;
   dataset = zeros(window_size, 800);
   for i=1:800
     dataset(:,i) = x(i:i+window_size-1)';
@@ -18,7 +18,7 @@ function data = execute_learn_algorithm(W, matrix_topology, g, gp, window_size, 
 	data = learn(dataset, expected, W, g, gp, params);
 
   testset_output = zeros(size(test_results));
- 
+
   err = []
   for i=1:size(test_set, 2)
      y = run_neural_network(W, test_set(:,i), g);

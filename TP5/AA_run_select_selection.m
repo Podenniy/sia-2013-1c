@@ -4,53 +4,45 @@
 setup_neuronal_network_data();
 replace_algorithms = struct();
 
-replace_algorithms(1).func = @replace_2;
-replace_algorithms(1).name = 'replace_2';
-replace_algorithms(2).func = @replace_3;
-replace_algorithms(2).name = 'replace_3';
+replace_algorithms(1).func = @replace_1;
+replace_algorithms(1).name = 'replace_1';
+replace_algorithms(2).func = @replace_2;
+replace_algorithms(2).name = 'replace_2';
+replace_algorithms(3).func = @replace_3;
+replace_algorithms(3).name = 'replace_3';
 
-needs_G = [true, true];
+needs_G = [false, true, true];
 
-N_range = [80];
+N_range = [20 80 160];
 
 G_range = [0.6 0.9];
 % G_range = [0.9];
 
 selection_algorithms = struct();
 
-selection_algorithms(1).func = @elite;
-selection_algorithms(1).name = 'elite';
-selection_algorithms(2).func = @rank_select;
-selection_algorithms(2).name = 'rank_select';
-selection_algorithms(3).func = @roulette;
-selection_algorithms(3).name = 'roulette';
-selection_algorithms(4).func = @(x, y, z)(tournament(x, y, 0.75));
-selection_algorithms(4).name = 'tournament 0.75';
-selection_algorithms(5).func = @(x, y, z)(boltzmann(x, y, z.g));
-selection_algorithms(5).name = 'boltzmann T = generations';
-selection_algorithms(6).func = @(x, y, z)(boltzmann(x, y, 0.5*z.g));
-selection_algorithms(6).name = 'boltzmann T = 0.5 * generations';
-selection_algorithms(7).func = @(x, y, z)(mix1(x, y, 0.3));
-selection_algorithms(7).name = 'mix roulette + 30% elite';
-selection_algorithms(8).func = @(x, y, z)(mix1(x, y, 0.7));
-selection_algorithms(8).name = 'mix roulette + 70% elite';
-selection_algorithms(9).func = @(x, y, z)(mix2(x, y, 0.3));
-selection_algorithms(9).name = 'mix stochastic + 30% elite';
-selection_algorithms(10).func = @(x, y, z)(mix2(x, y, 0.7));
-selection_algorithms(10).name = 'mix stochastic + 70% elite';
-selection_algorithms(11).func = @(x, y, z)([x, y]);
-selection_algorithms(11).name = 'None';
+selection_algorithms(1).func = @(x, y, z)(mix2(x, y, 0.3));
+selection_algorithms(1).name = 'mix stochastic + 30% elite';
 
 mutation_algorithms = struct();
-
-mutation_algorithms(1).name = 'no mutation';
-mutation_algorithms(1).func = @(x)(x);
-mutation_algorithms(1).pm = 1;
+mutation_algorithms(1).name = 'single mutation 90% of individuals';
+mutation_algorithms(1).func = @(x)(single_mutate(x, 0.90, (rand()-0.5)));
+mutation_algorithms(2).name = 'universal_mutate, 0.95 per allel';
+mutation_algorithms(2).func = @(x)(universal_mutate(x, 0.95, 0.5));
+mutation_algorithms(3).name = 'universal_mutate, 0.98 per allel';
+mutation_algorithms(3).func = @(x)(universal_mutate(x, 0.98, 0.5));
 
 cross_algorithms = struct();
 
-cross_algorithms(1).name = 'anular, L = 10';
-cross_algorithms(1).func = @(x, y)(anular(x, y, 10));
+cross_algorithms(1).name = 'single crossover';
+cross_algorithms(1).func = @crossover;
+cross_algorithms(2).name = 'double crossover';
+cross_algorithms(2).func = @double_crossover;
+cross_algorithms(3).name = 'anular, L = 10';
+cross_algorithms(3).func = @(x, y)(anular(x, y, 10));
+cross_algorithms(4).name = 'anular, L = 30';
+cross_algorithms(4).func = @(x, y)(anular(x, y, 30));
+cross_algorithms(5).name = 'universal_cross 0.6';
+cross_algorithms(5).func = @(x, y)(uniform_cross(x, y, 0.6));
 
 fitness_100 = fitness_limit(10000);
 generations_200 = generation_limit(200);
@@ -63,8 +55,7 @@ for N = N_range
 
   rand('seed', 0);
   randn('seed', 0);
-  initial_population = load('initial_80.m');
-  initial_population = initial_population.t;
+  initial_population = get_random_population(N);
 
   for i2 = 1:size(replace_algorithms, 2)
     replace_algorithm = replace_algorithms(i2).func;
@@ -78,7 +69,7 @@ for N = N_range
     end
     for G = G_target
 
-      for i4 = 9
+      for i4 = 1:size(selection_algorithms, 2)
         selection_algorithm = selection_algorithms(i4).func;
 
         for i5 = selection_2_target
