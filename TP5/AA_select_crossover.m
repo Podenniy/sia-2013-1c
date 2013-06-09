@@ -9,7 +9,7 @@ replace_algorithms(1).name = 'replace_2';
 replace_algorithms(2).func = @replace_3;
 replace_algorithms(2).name = 'replace_3';
 
-needs_G = [true, true];
+needs_G = [true];
 
 N_range = [80];
 
@@ -41,6 +41,7 @@ selection_algorithms(10).name = 'mix stochastic + 70% elite';
 selection_algorithms(11).func = @(x, y, z)([x, y]);
 selection_algorithms(11).name = 'None';
 
+
 mutation_algorithms = struct();
 
 mutation_algorithms(1).name = 'no mutation';
@@ -51,6 +52,14 @@ cross_algorithms = struct();
 
 cross_algorithms(1).name = 'anular, L = 10';
 cross_algorithms(1).func = @(x, y)(anular(x, y, 10));
+cross_algorithms(2).name = 'anular, L = 30';
+cross_algorithms(2).func = @(x, y)(anular(x, y, 10));
+cross_algorithms(3).name = 'single crossover';
+cross_algorithms(3).func = @(x, y)(crossover(x, y));
+cross_algorithms(4).name = 'double crossover';
+cross_algorithms(4).func = @(x, y)(double_crossover(x, y));
+cross_algorithms(5).name = 'uniform crossover 0.6';
+cross_algorithms(5).func = @(x, y)(uniform_cross(x, y, 0.6));
 
 fitness_100 = fitness_limit(10000);
 generations_200 = generation_limit(200);
@@ -63,8 +72,7 @@ for N = N_range
 
   rand('seed', 0);
   randn('seed', 0);
-  initial_population = load('initial_80.m');
-  initial_population = initial_population.t;
+  initial_population = get_random_population(N);
 
   for i2 = 1:size(replace_algorithms, 2)
     replace_algorithm = replace_algorithms(i2).func;

@@ -4,12 +4,12 @@
 setup_neuronal_network_data();
 replace_algorithms = struct();
 
-replace_algorithms(1).func = @replace_2;
-replace_algorithms(1).name = 'replace_2';
-replace_algorithms(2).func = @replace_3;
-replace_algorithms(2).name = 'replace_3';
+replace_algorithms(1).func = @replace_1;
+replace_algorithms(1).name = 'replace_1';
+%replace_algorithms(2).func = @replace_3;
+%replace_algorithms(2).name = 'replace_3';
 
-needs_G = [true, true];
+needs_G = [false];
 
 N_range = [80];
 
@@ -63,8 +63,7 @@ for N = N_range
 
   rand('seed', 0);
   randn('seed', 0);
-  initial_population = load('initial_80.m');
-  initial_population = initial_population.t;
+  initial_population = get_random_population(N);
 
   for i2 = 1:size(replace_algorithms, 2)
     replace_algorithm = replace_algorithms(i2).func;
@@ -78,7 +77,7 @@ for N = N_range
     end
     for G = G_target
 
-      for i4 = 9
+      for i4 = 1:(size(selection_algorithms, 2)-1)
         selection_algorithm = selection_algorithms(i4).func;
 
         for i5 = selection_2_target

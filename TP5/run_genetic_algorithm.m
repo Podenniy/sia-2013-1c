@@ -49,11 +49,11 @@ function data = run_genetic_algorithm(params)
       'std', status.std ...
     );
     if debug
-      display(['Generation ' num2str(status.g)]);
-      display(['  avg: ' num2str(status.f_avg)]);
-      display(['  90th: ' num2str(status.f_90th)]);
-      display(['  max: ' num2str(status.f_max)]);
-      display(['  std: ' num2str(status.std)]);
+      disp(['Generation ' num2str(status.g)]);
+      disp(['  avg: ' num2str(status.f_avg)]);
+      disp(['  90th: ' num2str(status.f_90th)]);
+      disp(['  max: ' num2str(status.f_max)]);
+      disp(['  std: ' num2str(status.std)]);
       if plotdebug
         plotresults(data);
         drawnow;
