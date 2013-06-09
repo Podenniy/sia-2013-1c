@@ -1,14 +1,14 @@
 function data = run_genetic_algorithm(params)
 
   param = @(t, x)(get_default_parameter(params, t, x));
-  
+
   replace_algorithm = param('replace_algorithm', 0);
   done = param('done', 0);
   debug = param('debug', true);
   N = param('N', 100);
-  
+
   setup_neuronal_network_data();
-  
+
   % status = struct(...
   %  'N', N, ...          # Number of individuals
   %  'p', population, ... # The population. Array of structs with
@@ -32,12 +32,12 @@ function data = run_genetic_algorithm(params)
     status = get_random_population(N);
   end
   status = evaluate_population(status);
-  
+
   data = [];   % Will contain .g fields with data about generations
   prev = 0;
 
   while ~done(prev, status)
-    
+
     data(status.g).d = struct(...
       'g', status.g, ...
       'f_avg', status.f_avg, ...
@@ -57,7 +57,11 @@ function data = run_genetic_algorithm(params)
       plotresults(data);
       drawnow;
     end
-    
+
+    if mod(status.g, params.mutate_cycle) == 0
+        params.pm = params.c * params.pm
+    end
+
     prev = status;
     status = replace_algorithm(status, params);
     status = evaluate_population(status);
