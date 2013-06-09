@@ -13,8 +13,11 @@ function i = backpropagate_individual(i)
     'debug', false ...
   );
   
+  tic;
   global dataset expected;
   data = learn(dataset, expected, i.W, g, gp, params);
   i.W = data.W;
   i = flatten(i);
+  y = toc;
+  disp(["Backpropagation took " num2str(y)]);
 end

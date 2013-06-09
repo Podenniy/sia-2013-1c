@@ -61,7 +61,7 @@ function data = run_genetic_algorithm(params)
     end
 
     if mod(status.g, params.mutate_cycle) == 0
-        params.pm = params.c * params.pm
+        params.pm = params.c * params.pm;
     end
 
     prev = status;
