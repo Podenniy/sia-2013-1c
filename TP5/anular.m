@@ -20,6 +20,8 @@ function [u, v] = anular(i1, i2, L)
              i1.allels(t1+1:t2);...
              i2.allels(t2+1:N )];
 
+  i1.allels = allels1;
+  i2.allels = allels2;
   u = unflatten(i1);
   v = unflatten(i2);
                 
