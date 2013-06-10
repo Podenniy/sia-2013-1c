@@ -1,0 +1,4 @@
+Para correr el motor, se debe ejecutar el archivo runner.m
+
+Los parametros del motor se pueden ajustar modificando el archivo runner.m, a partir de la linea 62. Ahi se definen N, G, y que metodos de seleccion, cruce, reemplazo y mutacion van a ser usados. Para cambiar un metodo, se debe seleccionar el indice de la variacion deseada. Los indices pueden obtenerse en las lineas anteriores, donde se define y documenta cada posible metodo.
+
