@@ -56,15 +56,15 @@ red neuronal multicapa que aprenda la siguiente función: $z(x, y) = c\sin(a x -
 
 \section{Descripción del Problema}
 
-En el trabajo anterior, una arquitectura de una red neuronal encontrada óptima para el
+En el trabajo anterior, la mejor arquitectura de una red neuronal para el
 problema en cuestión tenía 9 y 6 neuronas en sus capas ocultas, 2 entradas, y una capa de
 salida de una neurona. Esto implica que los pesos entre las capas pueden representarse como
 matrices de dimensiones 3x9, 10x6 y 7x1 respectivamente, lo que da un total de 94
 valores. Estos 94 valores son los alelos de los cromosomas, los individuos de la
 población.
 
-Se utilizó el error cuadrático medio respecto de un conjunto de datos de prueba.
-Por lo tanto, la función de \textit{fitness} se definió como el inverso multiplicativo
+Anteriormente, se utilizó el error cuadrático medio respecto de un conjunto de datos de prueba como medida 
+de que tan buena era una red neuronal. Por lo tanto, la función de \textit{fitness} se definió como el inverso multiplicativo
 del error cuadrático medio, para que mayor \textit{fitness} se corresponda con una red
 neuronal con menor error.
 
@@ -360,9 +360,9 @@ luego de 200 generaciones para distintas ejecuciones del algoritmo}
 En los resultados observados utilizando backpropagation como operador en el 
 algoritmo genético (sección \ref{sec:res}), se encontró que buenos
 parámetros para el motor son: utilizar el método de reemplazo 2, con
-el método de selección para cruce \"mix estocástico + 30\% elite\",
-método de selección para reemplazo generacional \"ranking\", operador
-de cruce \"anular, L=10\", y un coeficiente de reemplazo generacional $G=0.6$.
+el método de selección para cruce ``mix estocástico + 30\% elite'',
+método de selección para reemplazo generacional ``ranking'', operador
+de cruce ``anular, L=10'', y un coeficiente de reemplazo generacional $G=0.6$.
 
 En el trabajo práctico anterior, utilizando meramente el algoritmo de
 \textit{backpropagation} se obtuvo una red con un error cuadrático medio de $0.00025$. 
