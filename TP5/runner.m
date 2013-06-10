@@ -59,12 +59,12 @@ mutation_algorithms(4).func = @(x, pm)(single_mutate(x, pm, (rand()-0.5)));
 mutation_algorithms(4).pm = 0.9;
 
 
-N = 160;
+N = 20;
 G = 0.6;
-replace_algorithm = replace_algorithms(1).func;
-selection_algorithm = selection_algorithms(1).func;
-selection_algorithm_2 = selection_algorithms(2).func;
-cross_algorithm = cross_algorithms(1).func;
+replace_algorithm = replace_algorithms(1);
+selection_algorithm = selection_algorithms(1);
+selection_algorithm_2 = selection_algorithms(2);
+cross_algorithm = cross_algorithms(1);
 mutation_algorithm = mutation_algorithms(1);
 
 fitness_100 = fitness_limit(10000);
@@ -77,10 +77,10 @@ initial_population = get_random_population(N);
 params = struct(...
     'N', N, ...
     'G', G, ...
-    'replace_algorithm', generate_replace_algorithm(replace_algorithm), ...
-    'selection_algorithm', selection_algorithm, ...
-    'selection_algorithm_2', selection_algorithm_2, ...
-    'cross_algorithm', cross_algorithm, ...
+    'replace_algorithm', generate_replace_algorithm(replace_algorithm.func), ...
+    'selection_algorithm', selection_algorithm.func, ...
+    'selection_algorithm_2', selection_algorithm_2.func, ...
+    'cross_algorithm', cross_algorithm.func, ...
     'mutate_algorithm', mutation_algorithm.func, ...
     'backpropagate_probablility', 0.05, ...
     'done', cut_condition, ...
@@ -92,4 +92,36 @@ params = struct(...
     'c', 0.0015, ...
     'pm', mutation_algorithm.pm ...
 );
+
+
+filename = ['resultado_' datestr(now,30) '.mat'];
+disp(['=====================================']);
+disp(['Using N: ' num2str(N)]);
+disp(['Using replace algorithm: ' replace_algorithm.name]);
+disp(['Using G: ' num2str(G)]);
+disp(['Using selection algorithm: ' selection_algorithm.name]);
+disp(['Using selection algorithm 2: ' selection_algorithm_2.name]);
+disp(['Using mutation algorithm: ' mutation_algorithm.name]);
+disp(['Using cross algorithm: ' cross_algorithm.name]);
+
+data = struct();
+tic;
+data.status = run_genetic_algorithm(params);
+runtime = toc;
+
+disp(['Running time: ' num2str(runtime)]);
+disp(['Saving into file: ' filename]);
+
+data.N = N;
+data.G = G;
+data.replace_algorithm = replace_algorithm.name;
+data.selection_algorithm = selection_algorithm.name;
+data.selection_algorithm_2 = selection_algorithm.name;
+data.cross_algorithm = cross_algorithm.name;
+data.mutation_algorithm = mutation_algorithm.name;
+data.runtime = runtime;
+
+save('-v7', filename, 'data');
+
+
 

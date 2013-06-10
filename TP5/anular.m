@@ -10,8 +10,6 @@ function [u, v] = anular(i1, i2, L)
     t2 = c;
   end
   
-  N = size(i1.allels, 2);
-  
   allels1 = [i1.allels(   1:t1);...
              i2.allels(t1+1:t2);...
              i1.allels(t2+1:N )];
